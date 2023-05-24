@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here -->
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="colorPrimary">@color/nba_primary_color</item>
+        <item name="colorPrimaryVariant">@color/nba_primary_variant_color</item>
+        <item name="colorOnPrimary">@color/nba_on_primary_color</item>
+        <item name="colorSecondary">@color/nba_secondary_color</item>
+        <item name="colorSecondaryVariant">@color/nba_secondary_variant_color</item>
+        <item name="colorOnSecondary">@color/nba_on_secondary_color</item>
+        <item name="android:statusBarColor">@color/nba_primary_color_dark</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    </style>
+</resources>
