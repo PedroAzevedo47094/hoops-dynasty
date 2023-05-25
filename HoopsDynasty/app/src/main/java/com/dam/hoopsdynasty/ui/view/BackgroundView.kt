@@ -60,8 +60,3 @@ fun Background() {
 
 }
 
-@Preview
-@Composable
-fun PreviewMyApp() {
-    Background()
-}
