@@ -20,8 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
 import kotlinx.coroutines.delay
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 //last
 @Composable
@@ -104,11 +101,9 @@ fun Login() {
             }
 
 
-
-            }
         }
     }
-
+}
 
 
 @Preview
@@ -219,6 +214,6 @@ fun LoginForm() {
                 )
             }
         }
-        }
     }
+}
 //TODO: Add a button to submit the form and navigate to the next screen and store the data
