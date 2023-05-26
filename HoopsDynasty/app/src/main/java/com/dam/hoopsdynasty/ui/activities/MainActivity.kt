@@ -22,8 +22,6 @@ class MainActivity : AppCompatActivity() {
                 MaterialTheme {
                     Background()
                     Login()
-                    Text(text ="Hello World!")
-
                 }
 
             }

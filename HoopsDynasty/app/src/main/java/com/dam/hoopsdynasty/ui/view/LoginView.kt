@@ -4,19 +4,23 @@ package com.dam.hoopsdynasty.ui.view
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
 import kotlinx.coroutines.delay
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 //last
 @Composable
@@ -110,45 +115,110 @@ fun Login() {
 @Composable
 fun PreviewMyApp() {
     Background()
-    Login()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        LoginForm()
+    }
 }
 
 @Composable
 fun LoginForm() {
-    OutlinedTextField(
-        value = "",
-        onValueChange = { /* TODO: Handle email change */ },
-        label = { Text(text = "Email", color = Color.White) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                border = BorderStroke(1.dp, Color.White),
-                shape = MaterialTheme.shapes.medium
-            )
+    var firstName by remember { mutableStateOf("") }
+    var lastName by remember { mutableStateOf("") }
 
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    OutlinedTextField(
-        value = "",
-        onValueChange = { /* TODO: Handle password change */ },
-        label = { Text(text = "Password", color = Color.White) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                border = BorderStroke(1.dp, Color.White),
-                shape = MaterialTheme.shapes.medium
+
+    Column() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)),
+
+                ) {
+                Text(
+                    text = "Manager Info",
+                    modifier = Modifier
+                        .padding(horizontal = 40.dp, vertical = 10.dp),
+                    color = Color.White,
+                    fontSize = 23.sp
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(18.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .height(55.dp),
+        ) {
+            Text(
+                text = "First Name",
+                color = Color.White,
+                fontSize = 23.sp,
+                modifier = Modifier.padding(end = 8.dp)
             )
-    )
-    Spacer(modifier = Modifier.height(16.dp))
-    OutlinedButton(
-        onClick = { /* TODO: Handle login button click */ },
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                border = BorderStroke(1.dp, Color.White),
-                shape = MaterialTheme.shapes.medium
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                OutlinedTextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(Color.White.copy(alpha = 0.19f))
+                        .border(
+                            BorderStroke(1.dp, Color.Black),
+                            shape = RoundedCornerShape(4.dp)
+                        ),
+                    textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+                    singleLine = true
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .height(55.dp),
+        ) {
+            Text(
+                text = "Last Name",
+                color = Color.White,
+                fontSize = 23.sp,
+                modifier = Modifier.padding(end = 8.dp)
             )
-    ) {
-        Text(text = "Login", color = Color.White)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                OutlinedTextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(Color.White.copy(alpha = 0.19f))
+                        .border(
+                            BorderStroke(1.dp, Color.Black),
+                            shape = RoundedCornerShape(4.dp)
+                        ),
+                    textStyle = TextStyle(color = Color.White, fontSize = 16.sp),
+                    singleLine = true
+                )
+            }
+        }
+        }
     }
-}
+//TODO: Add a button to submit the form and navigate to the next screen and store the data
