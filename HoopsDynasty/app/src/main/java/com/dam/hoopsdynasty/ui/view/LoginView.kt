@@ -27,10 +27,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
-
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -54,6 +52,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import com.dam.hoopsdynasty.data.dao.ManagerDao
+import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
+import com.dam.hoopsdynasty.data.model.Manager
+import com.dam.hoopsdynasty.data.repository.ManagerRepository
 import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
 import kotlinx.coroutines.delay
 
@@ -141,10 +143,28 @@ fun PreviewMyApp() {
 
 @Composable
 fun LoginForm() {
-    var firstName by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var mExpanded by remember { mutableStateOf(false) }
+
+    // Create a list of cities
+    val mGenders = listOf("Male", "Female")
+
+    // Create a string value to store the selected city
+    var mSelectedText by remember { mutableStateOf("") }
+
+    var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
+
+    val onSaveClick: () -> Unit = {
+        //TODO: save manager
+        //create a new manager
+       /* val manager = Manager(name = name, genre = mSelectedText, team = null)
+
+        ManagerRepository.insertManager(manager)
 
 
+        }*/
 
+    }
 
     Column() {
         Row(
@@ -184,8 +204,8 @@ fun LoginForm() {
                     .height(55.dp) // Adjust the height as needed
             ) {
                 TextField(
-                    value = firstName,
-                    onValueChange = { firstName = it },
+                    value = name,
+                    onValueChange = { name = it },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 4.dp),
@@ -201,15 +221,7 @@ fun LoginForm() {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        var mExpanded by remember { mutableStateOf(false) }
 
-        // Create a list of cities
-        val mGenders = listOf("Male", "Female")
-
-        // Create a string value to store the selected city
-        var mSelectedText by remember { mutableStateOf("") }
-
-        var mTextFieldSize by remember { mutableStateOf(Size.Zero) }
 
         val icon = if (mExpanded)
             Icons.Filled.KeyboardArrowUp
@@ -235,8 +247,6 @@ fun LoginForm() {
                 modifier = Modifier
                     .fillMaxSize()
                     .onGloballyPositioned { coordinates ->
-                        // This value is used to assign to
-                        // the DropDown the same width
                         mTextFieldSize = coordinates.size.toSize()
                     }
                     .padding(start = 4.dp),
@@ -285,7 +295,9 @@ fun LoginForm() {
 
         }
 
-            Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+
+
 
         Row(
             modifier = Modifier
@@ -294,6 +306,7 @@ fun LoginForm() {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.Bottom
         ) {
+            //TODO: Replace the button to the other file ReusableComposables.kt
             Box(
                 modifier = Modifier
                     .padding(4.dp) // Adjust the padding values for the Box
@@ -302,7 +315,10 @@ fun LoginForm() {
             ) {
                 TextButton(
                     onClick = { /* Handle button click here */ },
-                    modifier = Modifier.padding(horizontal = 30.dp, vertical = 0.5.dp), // Adjust the padding values for the TextButton
+                    modifier = Modifier.padding(
+                        horizontal = 30.dp,
+                        vertical = 0.5.dp
+                    ), // Adjust the padding values for the TextButton
                     colors = ButtonDefaults.textButtonColors(
                         //backgroundColor = Color.Transparent, // Set the background color to transparent
                         contentColor = Color.White, // Set the text color
@@ -326,10 +342,8 @@ fun LoginForm() {
         }
 
 
-
-
-
     }
 }
+
 
 //TODO: Add a button to submit the form and navigate to the next screen and store the data
