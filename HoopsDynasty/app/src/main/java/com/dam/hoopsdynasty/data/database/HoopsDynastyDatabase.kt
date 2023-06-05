@@ -17,7 +17,11 @@ import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Season
 import com.dam.hoopsdynasty.data.model.Team
 
-@Database(entities = [Team::class, Player::class, Manager::class, Season::class, Game::class], version = 1,exportSchema = false)
+@Database(
+    entities = [Team::class, Player::class, Manager::class, Season::class, Game::class],
+    version = 2,
+    exportSchema = false
+)
 @TypeConverters(Converters::class)
 abstract class HoopsDynastyDatabase : RoomDatabase() {
     abstract fun teamDao(): TeamDao

@@ -15,7 +15,9 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
     private val repository: ManagerRepository =
         ManagerRepository(HoopsDynastyDatabase.getDatabase(application).managerDao())
 
-    fun insertManager(manager: Manager) {
+    fun insertManager(name: String, password: String) {
+        val manager = Manager(name = name, password = password, team = null)
+
         viewModelScope.launch {
             repository.insertManager(manager)
         }

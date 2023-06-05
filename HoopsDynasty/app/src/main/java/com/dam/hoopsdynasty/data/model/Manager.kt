@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class Manager(
     @PrimaryKey val id: Int = 1,
     val name:String,
-    val genre:String,
+    val password: String,
     val team: Team?
 )
