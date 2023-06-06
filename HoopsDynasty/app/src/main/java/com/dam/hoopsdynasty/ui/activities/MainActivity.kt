@@ -7,14 +7,11 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dam.hoopsdynasty.ui.Navigation
 import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
-
 import com.dam.hoopsdynasty.ui.view.Background
-import com.dam.hoopsdynasty.ui.view.Register_Login.ManagerInfo
-
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
+import com.google.firebase.FirebaseApp
 
 
 class MainActivity : AppCompatActivity() {
@@ -23,10 +20,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-           HoopsDynastyApp(viewModel = mainViewModel)
 
-          //  HoopsDynastyApp()
+        FirebaseApp.initializeApp(this)
+
+        setContent {
+            HoopsDynastyApp(viewModel = mainViewModel)
+
+
         }
 
     }
@@ -34,15 +34,13 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 //fun HoopsDynastyApp(){
-fun HoopsDynastyApp(viewModel: MainViewModel){
-    val viewModel : MainViewModel = viewModel()
+fun HoopsDynastyApp(viewModel: MainViewModel) {
+
     HoopsDynastyTheme {
 
         MaterialTheme {
             Background()
             Navigation()
-            //ManagerInfo(viewModel, true)
-            //ManagerInfo()
         }
 
     }
