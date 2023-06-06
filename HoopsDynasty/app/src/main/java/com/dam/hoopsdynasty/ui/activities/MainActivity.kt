@@ -1,7 +1,6 @@
 package com.dam.hoopsdynasty.ui.activities
 
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -9,10 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dam.hoopsdynasty.ui.Navigation
 import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
 
 import com.dam.hoopsdynasty.ui.view.Background
-import com.dam.hoopsdynasty.ui.view.ManagerInfo
+import com.dam.hoopsdynasty.ui.view.Register_Login.ManagerInfo
 
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
@@ -40,7 +40,8 @@ fun HoopsDynastyApp(viewModel: MainViewModel){
 
         MaterialTheme {
             Background()
-            ManagerInfo(viewModel)
+            Navigation()
+            //ManagerInfo(viewModel, true)
             //ManagerInfo()
         }
 

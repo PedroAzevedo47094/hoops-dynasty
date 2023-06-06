@@ -40,22 +40,37 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
                 }
             }
         }
+    }
 
-        fun getManager() {
-            viewModelScope.launch {
-                val manager = managerRepository.getManager()
-                // Handle manager retrieval
-            }
-        }
 
-        fun updateManager(manager: Manager) {
-            viewModelScope.launch {
-                managerRepository.updateManager(manager)
-            }
-        }
-
-        fun logoutUser() {
-            authViewModel.logoutUser()
+    fun getManager() {
+        viewModelScope.launch {
+            val manager = managerRepository.getManager()
+            // Handle manager retrieval
         }
     }
+
+    fun updateManager(manager: Manager) {
+        viewModelScope.launch {
+            managerRepository.updateManager(manager)
+        }
+    }
+
+    fun logoutUser() {
+        authViewModel.logoutUser()
+    }
+
+    fun loginManager(email: String, password: String) {
+        viewModelScope.launch {
+            val isUserLoggedIn = authViewModel.loginUser(email, password)
+            if (isUserLoggedIn) {
+                // Handle user login
+            } else {
+                // print error message to user
+            }
+        }
+
+    }
 }
+
+

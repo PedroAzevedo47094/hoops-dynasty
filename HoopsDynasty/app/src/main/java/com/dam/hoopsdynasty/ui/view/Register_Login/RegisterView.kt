@@ -1,10 +1,9 @@
-package com.dam.hoopsdynasty.ui.view
+package com.dam.hoopsdynasty.ui.view.Register_Login
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,106 +22,38 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
+import androidx.navigation.NavController
+import com.dam.hoopsdynasty.ui.Screen
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
-import kotlinx.coroutines.delay
+
 
 @Composable
-fun ManagerInfo(viewModel: MainViewModel) {
-
-    HoopsDynastyTheme() {
-        MaterialTheme {
-            var isVisible by remember { mutableStateOf(false) }
-            val offsetY by animateDpAsState(
-                targetValue = if (isVisible) (-300f).dp else 0.dp,
-                animationSpec = tween(durationMillis = 2000)
-            )
-
-            LaunchedEffect(Unit) {
-                isVisible = true
-            }
-
-            Column(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Hoops Dynasty",
-                        color = Color.White,
-                        modifier = Modifier
-                            .offset(y = offsetY),
-                        style = TextStyle(
-                            fontSize = 40.sp,
-                            shadow = Shadow(
-                                color = Color.Gray, offset = Offset(5.0f, 10.0f), blurRadius = 2f
-                            )
-                        )
-                    )
-
-                }
-
-            }
-            var showContent by remember { mutableStateOf(false) }
-
-            LaunchedEffect(Unit) {
-                delay(2000)
-                showContent = true
-            }
-
-            if (showContent) {
-                // Your content here
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    ManagerInfoForm(viewModel)
-                }
-            }
-
-
-        }
-    }
-}
-
-@Composable
-fun ManagerInfoForm(viewModel: MainViewModel) {
+fun ManagerRegister(viewModel: MainViewModel, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var password by remember {
         mutableStateOf("")
     }
-
-
-
-
 
     Column() {
         Row(
@@ -138,7 +68,7 @@ fun ManagerInfoForm(viewModel: MainViewModel) {
                     .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)),
             ) {
                 Text(
-                    text = "Manager Info",
+                    text = "Register Manager",
                     modifier = Modifier
                         .padding(horizontal = 40.dp, vertical = 10.dp),
                     color = Color.White,
@@ -167,7 +97,7 @@ fun ManagerInfoForm(viewModel: MainViewModel) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 4.dp),
-                    textStyle = TextStyle(color = Color.White, fontSize = 20.sp),
+                    textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent, // Change the background color here
@@ -198,7 +128,7 @@ fun ManagerInfoForm(viewModel: MainViewModel) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 4.dp),
-                    textStyle = TextStyle(color = Color.White, fontSize = 20.sp),
+                    textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent, // Change the background color here
@@ -230,7 +160,7 @@ fun ManagerInfoForm(viewModel: MainViewModel) {
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 4.dp),
-                    textStyle = TextStyle(color = Color.White, fontSize = 20.sp),
+                    textStyle = TextStyle(color = Color.White, fontSize = 18.sp),
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent, // Change the background color here
@@ -266,7 +196,7 @@ fun ManagerInfoForm(viewModel: MainViewModel) {
                     onClick = {
                         if (name.isNotBlank()) {
                             val managerViewModel = viewModel.managerViewModel
-                             managerViewModel.registerManager(email, name, password)
+                            managerViewModel.registerManager(email, name, password)
                         }
                     },
                     modifier = Modifier.padding(
@@ -294,8 +224,30 @@ fun ManagerInfoForm(viewModel: MainViewModel) {
                 }
             }
         }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                        append("Already have an account? Login")
+                    }
+                },
+                color = Color.White,
+                fontSize = 16.sp,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .clickable {
+                        navController.navigate(Screen.LoginScreen.route)
+                    }
+            )
+        }
     }
+
+
 }
 
-//TODO: Add a button to submit the form and navigate to the next screen and store the data
 
