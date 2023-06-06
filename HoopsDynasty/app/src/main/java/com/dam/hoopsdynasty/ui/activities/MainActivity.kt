@@ -10,7 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
+
 import com.dam.hoopsdynasty.ui.view.Background
+import com.dam.hoopsdynasty.ui.view.ManagerInfo
 
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
@@ -38,7 +40,7 @@ fun HoopsDynastyApp(viewModel: MainViewModel){
 
         MaterialTheme {
             Background()
-            //ManagerInfo(viewModel)
+            ManagerInfo(viewModel)
             //ManagerInfo()
         }
 
