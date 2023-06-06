@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "507089137954",
+    "project_id": "hoops-dynasty-b9db9",
+    "storage_bucket": "hoops-dynasty-b9db9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:507089137954:android:14753cebf7feeffcd7b57b",
+        "android_client_info": {
+          "package_name": "com.dam.hoopsdynasty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "507089137954-oh1bpbfu67ctfhiflg2bdl88j4k883mj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpJYDrOn-em__EefNNSOm-eqczNBGlTvc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "507089137954-oh1bpbfu67ctfhiflg2bdl88j4k883mj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
