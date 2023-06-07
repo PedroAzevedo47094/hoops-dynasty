@@ -29,6 +29,10 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getTeamsByDivision(division)
     }
 
+    fun getAllTeams(): Flow<List<Team>> {
+        return repository.getAllTeams()
+    }
+
     fun insertTeam(team: Team) = viewModelScope.launch {
         repository.insertTeam(team)
     }

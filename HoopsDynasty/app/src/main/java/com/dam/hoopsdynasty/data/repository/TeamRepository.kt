@@ -31,4 +31,8 @@ class TeamRepository(private val teamDao: TeamDao) {
     suspend fun insertAllTeams(teams: List<Team>) {
         teamDao.insertAllTeams(teams)
     }
+
+    fun getAllTeams(): Flow<List<Team>> {
+        return teamDao.getAllTeams()
+    }
 }
