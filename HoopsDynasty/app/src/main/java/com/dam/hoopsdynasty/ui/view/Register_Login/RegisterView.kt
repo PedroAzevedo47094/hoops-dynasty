@@ -196,9 +196,8 @@ fun ManagerRegister(viewModel: MainViewModel, navController: NavController) {
                     onClick = {
                         if (name.isNotBlank()) {
                             //TODO: register manager
-                            val managerViewModel = viewModel.managerViewModel
-                            managerViewModel.registerManager(email, name, password)
-                            navController.navigate(Screen.SelectTeamScreen.route)
+
+                            navController.navigate(Screen.SelectTeamScreen.withArgs(email, name, password))
                         }
                     },
                     modifier = Modifier.padding(

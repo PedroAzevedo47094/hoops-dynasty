@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.dam.hoopsdynasty.data.model.Manager
 import com.dam.hoopsdynasty.data.model.Player
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ManagerDao {
@@ -14,7 +15,7 @@ interface ManagerDao {
     suspend fun insertManager(manager: Manager)
 
     @Query("SELECT * FROM managers LIMIT 1")
-    suspend fun getManager(): Manager?
+    fun getManager(): Flow<Manager?>
 
     @Update
     suspend fun updateManager(manager: Manager)

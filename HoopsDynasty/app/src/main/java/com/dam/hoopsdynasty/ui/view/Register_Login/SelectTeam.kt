@@ -1,4 +1,4 @@
-package com.dam.hoopsdynasty.ui.view
+package com.dam.hoopsdynasty.ui.view.Register_Login
 
 import android.content.Context
 import androidx.compose.foundation.Image
@@ -13,10 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,12 +29,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.dam.hoopsdynasty.data.model.Manager
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
 @Composable
-fun SelectTeam(viewModel: MainViewModel, navController: NavController) {
+fun SelectTeam(
+    viewModel: MainViewModel,
+    navController: NavController,
+    email: String,
+    name: String,
+    password: String
+) {
 
     val context = LocalContext.current
     Column() {
@@ -84,11 +89,23 @@ fun SelectTeam(viewModel: MainViewModel, navController: NavController) {
                                 verticalArrangement = Arrangement.Center,
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Button(onClick = {
-                                  /*  val managerViewModel = viewModel.managerViewModel
-                                     managerViewModel.updateManagerWithTeam(team)*/
+                                Button(
+                                    onClick = {
+                                        val managerViewModel = viewModel.managerViewModel
+                                        managerViewModel.registerManager(
+                                            email,
+                                            name,
+                                            password,
+                                            team
+                                        )
+                                        navController.navigate("home")
+                                    },
+                                    elevation = null,
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Transparent
+                                    )
 
-                                }) {
+                                ) {
 
                                     TeamLogo(team, context)
                                 }
@@ -112,11 +129,9 @@ fun TeamLogo(team: Team, context: Context) {
 
     Image(
         painter = painterResource(logoResourceId),
-        contentDescription = "Andy Rubin",
+        contentDescription = team.abbreviation,
         modifier = Modifier.fillMaxWidth()
     )
 
 }
-
-
 

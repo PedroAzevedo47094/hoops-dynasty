@@ -10,5 +10,5 @@ data class Manager(
     val email: String,
     val name:String,
     val password: String,
-    val team: Team?
+    var team: Team?
 )

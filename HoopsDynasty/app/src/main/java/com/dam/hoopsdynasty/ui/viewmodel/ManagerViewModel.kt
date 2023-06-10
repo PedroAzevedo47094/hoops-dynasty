@@ -5,8 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Manager
+import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.FirestoreAuthRepository
 import com.dam.hoopsdynasty.data.repository.ManagerRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ManagerViewModel(application: Application) : AndroidViewModel(application) {
@@ -16,7 +20,7 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
     private val managerRepository: ManagerRepository =
         ManagerRepository(HoopsDynastyDatabase.getDatabase(application).managerDao())
 
-    fun registerManager(email: String, name: String, password: String) {
+    fun registerManager(email: String, name: String, password: String, team: Team) {
         viewModelScope.launch {
             val isUserRegistered = authViewModel.registerUser(email, password)
 
@@ -28,7 +32,7 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
                         email = email,
                         name = name,
                         password = password,
-                        team = null
+                        team = team
                     )
                     managerRepository.insertManager(manager)
                     managerRepository.insertManager(manager)
@@ -43,18 +47,17 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
-    fun getManager() {
-        viewModelScope.launch {
-            val manager = managerRepository.getManager()
-            // Handle manager retrieval
-        }
+    fun getManager(): Flow<Manager?> {
+        return managerRepository.getManager()
     }
 
-    fun updateManager(manager: Manager) {
+    fun updateManagerWithTeam(manager: Manager, team: Team) {
         viewModelScope.launch {
+            manager.team = team
             managerRepository.updateManager(manager)
         }
     }
+
 
     fun logoutUser() {
         authViewModel.logoutUser()
