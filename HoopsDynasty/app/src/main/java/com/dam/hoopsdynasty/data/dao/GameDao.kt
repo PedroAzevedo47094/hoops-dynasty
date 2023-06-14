@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.dam.hoopsdynasty.data.model.Game
+import com.dam.hoopsdynasty.data.model.Team
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,7 +21,7 @@ interface GameDao {
     fun getGamesBySeason(season: Int): Flow<List<Game>>
 
     @Query("SELECT * FROM games WHERE homeTeam = :team OR awayTeam = :team")
-    fun getGamesByTeam(team: String): Flow<List<Game>>
+    fun getGamesByTeam(team: Team): Flow<List<Game>>
 
     @Query("SELECT * FROM games WHERE homeTeam = :team")
     fun getHomeGamesByTeam(team: String): Flow<List<Game>>

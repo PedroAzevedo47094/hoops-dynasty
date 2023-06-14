@@ -2,6 +2,7 @@ package com.dam.hoopsdynasty.data.repository
 
 import com.dam.hoopsdynasty.data.dao.SeasonDao
 import com.dam.hoopsdynasty.data.model.Season
+import kotlinx.coroutines.flow.Flow
 
 class SeasonRepository(private val seasonDao: SeasonDao) {
 
@@ -11,7 +12,7 @@ class SeasonRepository(private val seasonDao: SeasonDao) {
     }
 
     //get season
-    suspend fun getSeason(): Season? {
+    fun getSeason(): Flow<Season?> {
         return seasonDao.getSeason()
     }
 
@@ -19,6 +20,7 @@ class SeasonRepository(private val seasonDao: SeasonDao) {
     suspend fun updateSeason(season: Season) {
         seasonDao.updateSeason(season)
     }
+
 
     //singleton pattern
     companion object {

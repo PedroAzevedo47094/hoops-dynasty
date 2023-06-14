@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
+import com.dam.hoopsdynasty.data.model.Manager
 import com.dam.hoopsdynasty.data.model.Season
 import com.dam.hoopsdynasty.data.repository.SeasonRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class SeasonViewModel(application: Application) : AndroidViewModel(application) {
@@ -19,11 +21,14 @@ class SeasonViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun getSeason() {
-        viewModelScope.launch {
-            repository.getSeason()
-        }
+    fun getSeason(): Flow<Season?> {
+        return repository.getSeason()
     }
+//    fun getSeason() {
+//        viewModelScope.launch {
+//            repository.getSeason()
+//        }
+//    }
 
     fun updateSeason(season: Season) {
         viewModelScope.launch {

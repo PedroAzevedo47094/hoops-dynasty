@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.dam.hoopsdynasty.data.model.Season
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SeasonDao {
@@ -13,7 +14,7 @@ interface SeasonDao {
     suspend fun insertSeason(season: Season)
 
     @Query("SELECT * FROM seasons LIMIT 1")
-    suspend fun getSeason(): Season?
+    fun getSeason(): Flow<Season?>
 
     @Update
     suspend fun updateSeason(season: Season)

@@ -3,6 +3,8 @@ package com.dam.hoopsdynasty.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.dam.hoopsdynasty.data.GamesTypeAdapter
+import com.google.gson.annotations.JsonAdapter
 import java.util.Calendar
 
 
@@ -23,9 +25,10 @@ data class Team(
         "PF" to null,
         "C" to null
     ),
-    var schedule: List<Game>,
-    var gamesPlayed: List<Game>,
+    var gameIds: List<String>, // Store the IDs of the games associated with the team
     var wins: Int = 0,
     var losses: Int = 0
+
+
 
 )

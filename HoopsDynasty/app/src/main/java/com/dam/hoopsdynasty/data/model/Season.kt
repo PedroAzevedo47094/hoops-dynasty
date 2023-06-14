@@ -9,7 +9,8 @@ data class Season(
     val teams: List<Team>,
     val players: List<Player>,
     val tradeList: List<Player>,
-    val schedule: List<Game>,
-    val standings: String,
-    val playoffs: String,
+    val schedule: List<Game>?,
+    val standings: String?,
+    val playoffs: String?,
+    val currentRound: Int,
 )

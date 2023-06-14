@@ -11,13 +11,16 @@ import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 fun HomeView(viewModel: MainViewModel) {
     val managerViewModel = viewModel.managerViewModel
     val managerState by managerViewModel.getManager().collectAsState(initial = null)
+    val season = viewModel.seasonViewModel
+    val seasonState by season.getSeason().collectAsState(initial = null)
+
+    val game = seasonState?.schedule
 
     // Display the manager information
     Column() {
-
-        Text(text = "Manager Name: ${managerState?.name }")
-        Text(text = "Manager Email: ${managerState?.email }")
-        Text(text = "Manager Team: ${managerState?.team?.name }")
+        /*for(i in 0..10) {
+            Text(text = "Game ${game?.get(i)?.homeTeam?.name} vs ${game?.get(i)?.awayTeam?.name}}")
+        }*/
     }
     // Add more Text components for other manager properties you want to display
 }

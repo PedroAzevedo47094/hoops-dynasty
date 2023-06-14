@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Game
+import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.GameRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -22,7 +23,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getGamesBySeason(season)
     }
 
-    fun getGamesByTeam(team: String): Flow<List<Game>> {
+    fun getGamesByTeam(team: Team): Flow<List<Game>> {
         return repository.getGamesByTeam(team)
     }
 

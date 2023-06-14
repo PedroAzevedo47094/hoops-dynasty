@@ -2,7 +2,7 @@ package com.dam.hoopsdynasty.data.repository
 
 import com.dam.hoopsdynasty.data.dao.GameDao
 import com.dam.hoopsdynasty.data.model.Game
-import com.dam.hoopsdynasty.data.model.Player
+import com.dam.hoopsdynasty.data.model.Team
 import kotlinx.coroutines.flow.Flow
 
 class GameRepository(private val gameDao: GameDao) {
@@ -17,7 +17,7 @@ class GameRepository(private val gameDao: GameDao) {
         return gameDao.getGamesBySeason(season)
     }
 
-    fun getGamesByTeam(team: String): Flow<List<Game>> {
+    fun getGamesByTeam(team: Team): Flow<List<Game>> {
         return gameDao.getGamesByTeam(team)
     }
 
