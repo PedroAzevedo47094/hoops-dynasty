@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
+import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.TeamRepository
 import kotlinx.coroutines.cancel
@@ -20,6 +21,34 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
 
     fun getTeam(abbreviation: String?): LiveData<Team> {
         return repository.getTeam(abbreviation)
+    }
+
+    fun changePlayers(starterPlayer : Player, benchPlayer : Player, team : Team) {
+        //put the starter player on the bench and the bench player in the starting lineup in the player position
+
+        team.bench = team.bench?.plus(starterPlayer)
+        team.bench = team.bench?.minus(benchPlayer)
+
+
+        //get the position of the starter player
+        val starterPosition = team.positions.entries.find { it.value == starterPlayer }?.key
+
+        //put the bench player in the starter position, the positions is a Map<String, Player?>
+        if (starterPosition != null) {
+            team.positions = team.positions.mapValues { entry ->
+                when (entry.value) {
+                    starterPlayer -> {
+                        benchPlayer
+                    }
+                    else -> {
+                        entry.value
+                    }
+                }
+            }
+        }
+
+        // Update the database using Room
+        updateTeam(team)
     }
 
     fun getTeamsByConference(conference: String): LiveData<List<Team>> {
