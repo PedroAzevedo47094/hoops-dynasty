@@ -2,8 +2,6 @@ package com.dam.hoopsdynasty.data
 
 import android.content.Context
 import com.dam.hoopsdynasty.R
-import com.dam.hoopsdynasty.data.dao.GameDao
-import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase.Companion.getDatabase
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Player
@@ -11,9 +9,6 @@ import com.dam.hoopsdynasty.data.model.Season
 import com.dam.hoopsdynasty.data.model.Team
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
@@ -110,8 +105,7 @@ object DataPopulator {
                         fgm = fgm,
                         fta = fta,
                         ftm = ftm,
-                        tpgm = tpgm,
-                        team = null // foreign key = team
+                        tpgm = tpgm
 
                     )
                     players.add(player)
@@ -585,9 +579,9 @@ object DataPopulator {
         )
     }
 
-    private suspend fun addGamesToTeams(teams: List<Team>, gameDao: GameDao): List<Team> {
+   /* private suspend fun addGamesToTeams(teams: List<Team>, gameDao: GameDao): List<Team> {
         teams.forEach { team ->
-            gameDao.getAllGames().single().forEach {game ->
+            gameDao.getAllGames().forEach {game ->
                 if (game.homeTeam == team || game.awayTeam == team) {
                     team.gameIds += game.id.toString()
                 }
@@ -596,7 +590,7 @@ object DataPopulator {
         }
 
         return teams
-    }
+    }*/
 
     private fun generateShortSchedule(teams: List<Team>): List<Game>{
         var shortSchedule = mutableListOf<Game>()

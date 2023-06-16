@@ -10,20 +10,22 @@ import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import kotlinx.coroutines.flow.Flow
 
+import androidx.lifecycle.LiveData
+
 @Dao
 interface TeamDao {
 
     @Query("SELECT * FROM teams")
-    fun getAllTeams(): Flow<List<Team>>
+    fun getAllTeams(): LiveData<List<Team>>
 
     @Query("SELECT * FROM teams WHERE abbreviation = :abbreviation")
-    fun getTeam(abbreviation: String): Flow<Team>
+    fun getTeam(abbreviation: String?): LiveData<Team>
 
     @Query("SELECT * FROM teams WHERE conference = :conference")
-    fun getTeamsByConference(conference: String): Flow<List<Team>>
+    fun getTeamsByConference(conference: String): LiveData<List<Team>>
 
     @Query("SELECT * FROM teams WHERE division = :division")
-    fun getTeamsByDivision(division: String): Flow<List<Team>>
+    fun getTeamsByDivision(division: String): LiveData<List<Team>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTeam(team: Team)

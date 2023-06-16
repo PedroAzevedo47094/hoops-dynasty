@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.dam.hoopsdynasty.ui.view.HomeView
 import com.dam.hoopsdynasty.ui.view.Register_Login.ManagerInfo
 import com.dam.hoopsdynasty.ui.view.Register_Login.SelectTeam
-import com.dam.hoopsdynasty.ui.view.RoosterView
+import com.dam.hoopsdynasty.ui.view.RosterView
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
 @Composable
@@ -18,6 +18,7 @@ fun Navigation() {
     val navController = rememberNavController()
 
     val viewModel: MainViewModel = viewModel()
+
     NavHost(navController = navController, startDestination = Screen.LoginScreen.route) {
         composable(route = Screen.LoginScreen.route) {
             ManagerInfo(viewModel = viewModel, true, navController = navController, 2000)
@@ -30,7 +31,6 @@ fun Navigation() {
             arguments = listOf(
                 navArgument("email") {
                     type = NavType.StringType
-
                 },
                 navArgument("name") {
                     type = NavType.StringType
@@ -48,10 +48,10 @@ fun Navigation() {
             )
         }
         composable(route = Screen.RosterScreen.route) {
-            RoosterView(viewModel = viewModel,navController = navController)
+            RosterView(mainViewModel = viewModel, navController = navController)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeView(viewModel = viewModel)
+            HomeView(mainViewModel = viewModel)
         }
 
 

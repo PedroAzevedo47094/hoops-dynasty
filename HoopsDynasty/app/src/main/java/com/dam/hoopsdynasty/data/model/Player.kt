@@ -26,5 +26,4 @@ data class Player(
     val fta: Float,
     val ftm: Float,
     val tpgm: Float,
-    val team: Team? // foreign key
 )

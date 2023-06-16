@@ -65,6 +65,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.navigation:navigation-runtime-ktx:2.5.3'
     implementation 'com.google.firebase:firebase-crashlytics-buildtools:2.9.5'
+    implementation 'androidx.lifecycle:lifecycle-process:2.6.1'
     annotationProcessor("androidx.room:room-compiler:2.5.1")
 
     // To use Kotlin annotation processing tool (kapt)
@@ -159,6 +160,8 @@ dependencies {
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-database-ktx'
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
 
 
 }

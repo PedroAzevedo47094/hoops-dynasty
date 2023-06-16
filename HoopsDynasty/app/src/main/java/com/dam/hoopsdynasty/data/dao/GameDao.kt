@@ -1,5 +1,6 @@
 package com.dam.hoopsdynasty.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -10,30 +11,29 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDao {
-
     @Query("SELECT * FROM games")
-    fun getAllGames(): Flow<List<Game>>
+    fun getAllGames(): LiveData<List<Game>>
 
     @Query("SELECT * FROM games WHERE id = :id")
-    fun getGame(id: Int): Flow<Game>
+    fun getGame(id: Int): LiveData<Game>
 
     @Query("SELECT * FROM games WHERE season = :season")
-    fun getGamesBySeason(season: Int): Flow<List<Game>>
+    fun getGamesBySeason(season: Int): LiveData<List<Game>>
 
     @Query("SELECT * FROM games WHERE homeTeam = :team OR awayTeam = :team")
-    fun getGamesByTeam(team: Team): Flow<List<Game>>
+    fun getGamesByTeam(team: Team): LiveData<List<Game>>
 
     @Query("SELECT * FROM games WHERE homeTeam = :team")
-    fun getHomeGamesByTeam(team: String): Flow<List<Game>>
+    fun getHomeGamesByTeam(team: String): LiveData<List<Game>>
 
     @Query("SELECT * FROM games WHERE awayTeam = :team")
-    fun getAwayGamesByTeam(team: String): Flow<List<Game>>
+    fun getAwayGamesByTeam(team: String): LiveData<List<Game>>
 
     @Query("SELECT * FROM games WHERE winner = :team")
-    fun getGamesByWinner(team: String): Flow<List<Game>>
+    fun getGamesByWinner(team: String): LiveData<List<Game>>
 
     @Query("SELECT * FROM games WHERE loser = :team")
-    fun getGamesByLoser(team: String): Flow<List<Game>>
+    fun getGamesByLoser(team: String): LiveData<List<Game>>
 
     @Insert
     suspend fun insertGame(game: Game)
@@ -43,4 +43,6 @@ interface GameDao {
 
     @Update
     suspend fun updateGame(game: Game)
+
+
 }

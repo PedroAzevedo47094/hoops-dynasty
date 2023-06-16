@@ -2,6 +2,7 @@ package com.dam.hoopsdynasty.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Player
@@ -14,25 +15,29 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
     private val repository: PlayerRepository =
         PlayerRepository(HoopsDynastyDatabase.getDatabase(application).playerDao())
 
-    val players: Flow<List<Player>> = repository.players
+    val players: LiveData<List<Player>> = repository.players
 
-    fun getPlayer(id: Int): Flow<Player> {
+    fun getAllPlayers(): LiveData<List<Player>> {
+        return repository.getAllPlayers()
+    }
+
+    fun getPlayer(id: Int): LiveData<Player> {
         return repository.getPlayer(id)
     }
 
-    fun getPlayersByPosition(position: String): Flow<List<Player>> {
+    fun getPlayersByPosition(position: String): LiveData<List<Player>> {
         return repository.getPlayersByPosition(position)
     }
 
-    fun getPlayersByRating(rating: Float): Flow<List<Player>> {
+    fun getPlayersByRating(rating: Float): LiveData<List<Player>> {
         return repository.getPlayersByRating(rating)
     }
 
-    fun getPlayersByRatingAndPosition(rating: Float, position: String): Flow<List<Player>> {
+    fun getPlayersByRatingAndPosition(rating: Float, position: String): LiveData<List<Player>> {
         return repository.getPlayersByRatingAndPosition(rating, position)
     }
 
-    fun getPlayersByRatingRange(rating: Float, rating2: Float): Flow<List<Player>> {
+    fun getPlayersByRatingRange(rating: Float, rating2: Float): LiveData<List<Player>> {
         return repository.getPlayersByRatingRange(rating, rating2)
     }
 
@@ -40,12 +45,8 @@ class PlayerViewModel(application: Application) : AndroidViewModel(application) 
         rating: Float,
         rating2: Float,
         position: String
-    ): Flow<List<Player>> {
+    ): LiveData<List<Player>> {
         return repository.getPlayersByRatingRangeAndPosition(rating, rating2, position)
-    }
-
-    fun getPlayersByTeam(teamAbbreviation: String): Flow<List<Player>> {
-        return repository.getPlayersByTeam(teamAbbreviation)
     }
 
     fun insertPlayer(player: Player) = viewModelScope.launch {

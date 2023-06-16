@@ -1,24 +1,42 @@
 package com.dam.hoopsdynasty.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.dam.hoopsdynasty.data.GameAdapter
+import com.dam.hoopsdynasty.data.ManagerAdapter
+import com.dam.hoopsdynasty.data.PlayerAdapter
+import com.dam.hoopsdynasty.data.TeamAdapter
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
+import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Manager
+import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.FirestoreAuthRepository
 import com.dam.hoopsdynasty.data.repository.ManagerRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import com.google.gson.GsonBuilder
 import kotlinx.coroutines.launch
+import java.lang.reflect.Type
+import kotlin.math.log
 
 class ManagerViewModel(application: Application) : AndroidViewModel(application) {
+
 
     private val authViewModel = AuthViewModel()
     private val firestoreAuthRepository = FirestoreAuthRepository()
     private val managerRepository: ManagerRepository =
         ManagerRepository(HoopsDynastyDatabase.getDatabase(application).managerDao())
+
+
+    fun getManagerTeam(): Team? {
+        return getManager().value?.team
+    }
 
     fun registerManager(email: String, name: String, password: String, team: Team) {
         viewModelScope.launch {
@@ -35,7 +53,8 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
                         team = team
                     )
                     managerRepository.insertManager(manager)
-                    managerRepository.insertManager(manager)
+
+                    backupData()
 
 
                 } else {
@@ -47,7 +66,113 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
     }
 
 
-    fun getManager(): Flow<Manager?> {
+    private fun backupData() {
+        val application = getApplication<Application>()
+        val mainViewModel = MainViewModel(application)
+        val teamViewModel = mainViewModel.teamViewModel
+        val playerViewModel = mainViewModel.playerViewModel
+        val gameViewModel = mainViewModel.gameViewModel
+        val seasonViewModel = mainViewModel.seasonViewModel
+
+
+        val uid = authViewModel.getCurrentUser()?.uid
+        val database = Firebase.database
+        val myRef = database.getReference("user/${uid}")
+
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Manager::class.java, ManagerAdapter())
+            .registerTypeAdapter(Team::class.java, TeamAdapter())
+            .registerTypeAdapter(Player::class.java, PlayerAdapter())
+            .registerTypeAdapter(Game::class.java, GameAdapter())
+            .create()
+
+        // Step 2: Convert and backup 'managers' table
+        getManager().observe(ProcessLifecycleOwner.get()) { managersList ->
+            val managersJson = gson.toJson(managersList)
+            myRef.child("managers").setValue(managersJson)
+        }
+
+        // Step 3: Convert and backup 'teams' table
+        teamViewModel.getAllTeams().observe(ProcessLifecycleOwner.get()) { teamsList ->
+            val teamsJson = gson.toJson(teamsList)
+            myRef.child("teams").setValue(teamsJson)
+        }
+
+//        // Step 4: Convert and backup 'players' table
+//        playerViewModel.getAllPlayers().observe(ProcessLifecycleOwner.get()) { playersList ->
+//            val playersJson = gson.toJson(playersList)
+//            myRef.child("players").setValue(playersJson)
+//        }
+
+        // Step 5: Convert and backup 'games' table
+
+//        val games = gameViewModel.getAllGames().value
+//        //print in the logcat
+//        Log.d("games", games.toString())
+//
+//
+//        gameViewModel.getAllGames().observe(ProcessLifecycleOwner.get()) { gamesList ->
+//            val gamesJson = gson.toJson(gamesList)
+//            myRef.child("games").setValue(gamesJson)
+//        }
+
+
+    }
+
+    private fun readData() {
+        val uid = authViewModel.getCurrentUser()?.uid
+        val database = Firebase.database
+        val myRef = database.getReference("user/$uid")
+
+        val application = getApplication<Application>()
+        val mainViewModel = MainViewModel(application)
+        val teamViewModel = mainViewModel.teamViewModel
+        val playerViewModel = mainViewModel.playerViewModel
+        val gameViewModel = mainViewModel.gameViewModel
+        val seasonViewModel = mainViewModel.seasonViewModel
+
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Manager::class.java, ManagerAdapter())
+            .registerTypeAdapter(Team::class.java, TeamAdapter())
+            .registerTypeAdapter(Player::class.java, PlayerAdapter())
+            .registerTypeAdapter(Game::class.java, GameAdapter())
+            .create()
+
+        // Read 'managers' data
+        myRef.child("managers").get().addOnSuccessListener { snapshot ->
+            val managerJson = snapshot.value.toString()
+            val manager = gson.fromJson(managerJson, Manager::class.java)
+
+            viewModelScope.launch {
+                managerRepository.insertManager(manager)
+            }
+
+        }
+
+        // Read 'teams' data
+        myRef.child("teams").get().addOnSuccessListener { snapshot ->
+            val teamsJson = snapshot.value.toString()
+            val teamsList = gson.fromJson(teamsJson, Array<Team>::class.java).toList()
+            teamsList.forEach { team ->
+                viewModelScope.launch {
+                    teamViewModel.insertTeam(team)
+                }
+            }
+        }
+
+        // Read 'games' data
+//        myRef.child("games").get().addOnSuccessListener { snapshot ->
+//            val gamesJson = snapshot.value.toString()
+//            val gamesList = gson.fromJson(gamesJson, Array<Game>::class.java).toList()
+//            gamesList.forEach { game ->
+//                viewModelScope.launch {
+//                    gameViewModel.insertGame(game)
+//                }
+//            }
+//        }
+    }
+
+    fun getManager(): LiveData<Manager?> {
         return managerRepository.getManager()
     }
 
@@ -67,7 +192,8 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             val isUserLoggedIn = authViewModel.loginUser(email, password)
             if (isUserLoggedIn) {
-                // Handle user login
+                readData()
+
             } else {
                 // print error message to user
             }

@@ -2,30 +2,32 @@ package com.dam.hoopsdynasty.data.repository
 
 import com.dam.hoopsdynasty.data.dao.ManagerDao
 import com.dam.hoopsdynasty.data.model.Manager
-import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.LiveData
 
 class ManagerRepository(private val managerDao: ManagerDao) {
-        suspend fun insertManager(manager: Manager) {
-            managerDao.insertManager(manager)
-        }
 
-        fun getManager(): Flow<Manager?> {
-            return managerDao.getManager()
-        }
+    suspend fun insertManager(manager: Manager) {
+        managerDao.insertManager(manager)
+    }
 
-        suspend fun updateManager(manager: Manager) {
-            managerDao.updateManager(manager)
-        }
+    fun getManager(): LiveData<Manager?> {
+        return managerDao.getManager()
+    }
 
-        //singleton pattern
-        companion object {
-            @Volatile
-            private var instance: ManagerRepository? = null
+    suspend fun updateManager(manager: Manager) {
+        managerDao.updateManager(manager)
+    }
 
-            fun getInstance(managerDao: ManagerDao): ManagerRepository {
-                return instance ?: synchronized(this) {
-                    instance ?: ManagerRepository(managerDao).also { instance = it }
-                }
+    // Singleton pattern
+    companion object {
+        @Volatile
+        private var instance: ManagerRepository? = null
+
+        fun getInstance(managerDao: ManagerDao): ManagerRepository {
+            return instance ?: synchronized(this) {
+                instance ?: ManagerRepository(managerDao).also { instance = it }
             }
         }
     }
+}
+

@@ -1,5 +1,6 @@
 package com.dam.hoopsdynasty.data.database
 
+
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -19,7 +20,7 @@ import com.dam.hoopsdynasty.data.model.Team
 
 @Database(
     entities = [Team::class, Player::class, Manager::class, Season::class, Game::class],
-    version = 4,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

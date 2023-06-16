@@ -3,37 +3,42 @@ package com.dam.hoopsdynasty.data.repository
 import com.dam.hoopsdynasty.data.dao.GameDao
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Team
-import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.LiveData
+
 
 class GameRepository(private val gameDao: GameDao) {
 
-    val games = gameDao.getAllGames()
+    val games: LiveData<List<Game>> = gameDao.getAllGames()
 
-    fun getGame(id: Int): Flow<Game> {
+    fun getAllGames(): LiveData<List<Game>> {
+        return gameDao.getAllGames()
+    }
+
+    fun getGame(id: Int): LiveData<Game> {
         return gameDao.getGame(id)
     }
 
-    fun getGamesBySeason(season: Int): Flow<List<Game>> {
+    fun getGamesBySeason(season: Int): LiveData<List<Game>> {
         return gameDao.getGamesBySeason(season)
     }
 
-    fun getGamesByTeam(team: Team): Flow<List<Game>> {
+    fun getGamesByTeam(team: Team): LiveData<List<Game>> {
         return gameDao.getGamesByTeam(team)
     }
 
-    fun getHomeGamesByTeam(team: String): Flow<List<Game>> {
+    fun getHomeGamesByTeam(team: String): LiveData<List<Game>> {
         return gameDao.getHomeGamesByTeam(team)
     }
 
-    fun getAwayGamesByTeam(team: String): Flow<List<Game>> {
+    fun getAwayGamesByTeam(team: String): LiveData<List<Game>> {
         return gameDao.getAwayGamesByTeam(team)
     }
 
-    fun getGamesByWinner(team: String): Flow<List<Game>> {
+    fun getGamesByWinner(team: String): LiveData<List<Game>> {
         return gameDao.getGamesByWinner(team)
     }
 
-    fun getGamesByLoser(team: String): Flow<List<Game>> {
+    fun getGamesByLoser(team: String): LiveData<List<Game>> {
         return gameDao.getGamesByLoser(team)
     }
 

@@ -13,6 +13,7 @@ import com.dam.hoopsdynasty.ui.view.Background
 import com.dam.hoopsdynasty.ui.view.HomeView
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +23,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+      /*  val options = FirebaseOptions.Builder()
+            .setDatabaseUrl("https://hoops-dynasty-b9db9-default-rtdb.europe-west1.firebasedatabase.app")
+            // Add other Firebase options if applicable
+            .build()*/
         FirebaseApp.initializeApp(this)
+
+
 
         setContent {
             HoopsDynastyApp(viewModel = mainViewModel)

@@ -3,26 +3,35 @@ package com.dam.hoopsdynasty.ui.view
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
+import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
 @Composable
-fun HomeView(viewModel: MainViewModel) {
-    val managerViewModel = viewModel.managerViewModel
-    val managerState by managerViewModel.getManager().collectAsState(initial = null)
-    val season = viewModel.seasonViewModel
-    val seasonState by season.getSeason().collectAsState(initial = null)
+fun HomeView(mainViewModel: MainViewModel) {
 
-    val game = seasonState?.schedule
+    val context = LocalContext.current
+    val managerViewModel = mainViewModel.managerViewModel
+    val teamViewModel = mainViewModel.teamViewModel
 
-    // Display the manager information
-    Column() {
-        /*for(i in 0..10) {
-            Text(text = "Game ${game?.get(i)?.homeTeam?.name} vs ${game?.get(i)?.awayTeam?.name}}")
-        }*/
+    val theManager by managerViewModel.getManager().observeAsState()
+    val teamAbr = theManager?.team?.abbreviation
+
+    val teamLiveData = teamViewModel.getTeam(teamAbr).observeAsState()
+    val team: Team? = teamLiveData.value
+
+
+    Column {
+        //Show manager name
+        //Show team name if available
+
+        Text(text = "Manager: ${theManager?.name}")
+        Text(text = "Team: ${team?.name}")
     }
-    // Add more Text components for other manager properties you want to display
+
+
 }
 
 

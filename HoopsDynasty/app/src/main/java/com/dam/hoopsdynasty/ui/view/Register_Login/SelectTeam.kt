@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.dam.hoopsdynasty.data.model.Team
+import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogo
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
+
 
 @Composable
 fun SelectTeam(
@@ -42,7 +45,7 @@ fun SelectTeam(
 ) {
 
     val context = LocalContext.current
-    Column() {
+    Column {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -65,7 +68,9 @@ fun SelectTeam(
         }
 
         val teamViewModel = viewModel.teamViewModel
-        val teams by teamViewModel.getAllTeams().collectAsState(initial = emptyList())
+        val teams: List<Team>? by teamViewModel.getAllTeams().observeAsState()
+
+
 
         Box(
             modifier = Modifier
@@ -73,41 +78,42 @@ fun SelectTeam(
                 .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
                 .background(Color(0x4DEEEEEE))
         ) {
-
             LazyRow(Modifier.fillMaxSize()) {
-                val chunkedTeams = teams.chunked(5)
-                items(chunkedTeams.size) { rowIndex ->
-                    Column(Modifier.fillMaxWidth()) {
-                        val rowTeams = chunkedTeams[rowIndex]
-                        rowTeams.forEach { team ->
-                            Column(
-                                Modifier
-                                    .weight(1f)
-                                    .padding(8.dp)
-                                    .height(100.dp)
-                                    .wrapContentHeight(Alignment.CenterVertically),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Button(
-                                    onClick = {
-                                        val managerViewModel = viewModel.managerViewModel
-                                        managerViewModel.registerManager(
-                                            email,
-                                            name,
-                                            password,
-                                            team
-                                        )
-                                        navController.navigate("home")
-                                    },
-                                    elevation = null,
-                                    colors = ButtonDefaults.buttonColors(
-                                        backgroundColor = Color.Transparent
-                                    )
-
+                val chunkedTeams = teams?.chunked(5)
+                chunkedTeams?.let {
+                    items(it.size) { rowIndex ->
+                        Column(Modifier.fillMaxWidth()) {
+                            val rowTeams = chunkedTeams[rowIndex]
+                            rowTeams.forEach { team ->
+                                Column(
+                                    Modifier
+                                        .weight(1f)
+                                        .padding(8.dp)
+                                        .height(100.dp)
+                                        .wrapContentHeight(Alignment.CenterVertically),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
                                 ) {
+                                    Button(
+                                        onClick = {
+                                            val managerViewModel = viewModel.managerViewModel
+                                            managerViewModel.registerManager(
+                                                email,
+                                                name,
+                                                password,
+                                                team
+                                            )
+                                            navController.navigate("roster")
+                                        },
+                                        elevation = null,
+                                        colors = ButtonDefaults.buttonColors(
+                                            backgroundColor = Color.Transparent
+                                        )
 
-                                    TeamLogo(team, context)
+                                    ) {
+
+                                        TeamLogo(team, context)
+                                    }
                                 }
                             }
                         }
@@ -119,19 +125,4 @@ fun SelectTeam(
     }
 }
 
-
-@Composable
-fun TeamLogo(team: Team, context: Context) {
-
-    val logo = "@drawable/${team.logo}"
-
-    val logoResourceId = context.resources.getIdentifier(logo, "drawable", context.packageName)
-
-    Image(
-        painter = painterResource(logoResourceId),
-        contentDescription = team.abbreviation,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-}
 

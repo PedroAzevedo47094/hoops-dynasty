@@ -3,28 +3,33 @@ package com.dam.hoopsdynasty.data.repository
 import com.dam.hoopsdynasty.data.dao.PlayerDao
 import com.dam.hoopsdynasty.data.model.Player
 import kotlinx.coroutines.flow.Flow
+import androidx.lifecycle.LiveData
 
 class PlayerRepository(private val playerDao: PlayerDao) {
 
-    val players = playerDao.getAllPlayers()
+    val players: LiveData<List<Player>> = playerDao.getAllPlayers()
 
-    fun getPlayer(id: Int): Flow<Player> {
+    fun getAllPlayers(): LiveData<List<Player>> {
+            return playerDao.getAllPlayers()
+        }
+
+    fun getPlayer(id: Int): LiveData<Player> {
         return playerDao.getPlayer(id)
     }
 
-    fun getPlayersByPosition(position: String): Flow<List<Player>> {
+    fun getPlayersByPosition(position: String): LiveData<List<Player>> {
         return playerDao.getPlayersByPosition(position)
     }
 
-    fun getPlayersByRating(rating: Float): Flow<List<Player>> {
+    fun getPlayersByRating(rating: Float): LiveData<List<Player>> {
         return playerDao.getPlayersByRating(rating)
     }
 
-    fun getPlayersByRatingAndPosition(rating: Float, position: String): Flow<List<Player>> {
+    fun getPlayersByRatingAndPosition(rating: Float, position: String): LiveData<List<Player>> {
         return playerDao.getPlayersByRatingAndPosition(rating, position)
     }
 
-    fun getPlayersByRatingRange(rating: Float, rating2: Float): Flow<List<Player>> {
+    fun getPlayersByRatingRange(rating: Float, rating2: Float): LiveData<List<Player>> {
         return playerDao.getPlayersByRatingRange(rating, rating2)
     }
 
@@ -32,16 +37,13 @@ class PlayerRepository(private val playerDao: PlayerDao) {
         rating: Float,
         rating2: Float,
         position: String
-    ): Flow<List<Player>> {
+    ): LiveData<List<Player>> {
         return playerDao.getPlayersByRatingRangeAndPosition(rating, rating2, position)
     }
 
-    fun getPlayersByTeam(teamAbbreviation: String): Flow<List<Player>> {
-        return playerDao.getPlayersByTeam(teamAbbreviation)
-    }
 
     suspend fun insertPlayer(player: Player) {
-        playerDao.instertPlayer(player)
+        playerDao.insertPlayer(player)
     }
 
     suspend fun updatePlayer(player: Player) {
@@ -51,6 +53,4 @@ class PlayerRepository(private val playerDao: PlayerDao) {
     suspend fun insertAllPlayers(players: List<Player>) {
         playerDao.insertAllPlayers(players)
     }
-
-
 }

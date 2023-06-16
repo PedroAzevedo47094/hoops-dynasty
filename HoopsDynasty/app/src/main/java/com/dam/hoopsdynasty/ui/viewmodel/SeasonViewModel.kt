@@ -2,6 +2,7 @@ package com.dam.hoopsdynasty.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Manager
@@ -21,7 +22,7 @@ class SeasonViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-    fun getSeason(): Flow<Season?> {
+    fun getSeason(): LiveData<Season?> {
         return repository.getSeason()
     }
 //    fun getSeason() {

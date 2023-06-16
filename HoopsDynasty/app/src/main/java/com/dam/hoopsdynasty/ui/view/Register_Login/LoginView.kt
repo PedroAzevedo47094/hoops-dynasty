@@ -164,6 +164,7 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
                         if (email.isNotBlank()) {
                             val managerViewModel = viewModel.managerViewModel
                             managerViewModel.loginManager(email, password)
+                            navController.navigate("home")
 
                         }
                     },

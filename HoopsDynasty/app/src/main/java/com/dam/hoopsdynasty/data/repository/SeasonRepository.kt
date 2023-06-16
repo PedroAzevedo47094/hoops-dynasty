@@ -1,5 +1,6 @@
 package com.dam.hoopsdynasty.data.repository
 
+import androidx.lifecycle.LiveData
 import com.dam.hoopsdynasty.data.dao.SeasonDao
 import com.dam.hoopsdynasty.data.model.Season
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ class SeasonRepository(private val seasonDao: SeasonDao) {
     }
 
     //get season
-    fun getSeason(): Flow<Season?> {
+    fun getSeason(): LiveData<Season?> {
         return seasonDao.getSeason()
     }
 
