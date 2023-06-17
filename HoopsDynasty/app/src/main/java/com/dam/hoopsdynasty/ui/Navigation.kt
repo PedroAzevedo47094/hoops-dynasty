@@ -51,7 +51,7 @@ fun Navigation() {
             RosterView(mainViewModel = viewModel, navController = navController)
         }
         composable(route = Screen.HomeScreen.route) {
-            HomeView(mainViewModel = viewModel)
+            HomeView(mainViewModel = viewModel, navController = navController)
         }
 
 
