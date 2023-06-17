@@ -1,6 +1,9 @@
 package com.dam.hoopsdynasty.ui.viewmodel
 
 import android.app.Application
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -8,8 +11,8 @@ import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.TeamRepository
+import com.dam.hoopsdynasty.ui.view.PlayerItem
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 class TeamViewModel(application: Application) : AndroidViewModel(application) {
@@ -23,31 +26,44 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getTeam(abbreviation)
     }
 
-    fun changePlayers(starterPlayer : Player, benchPlayer : Player, team : Team) {
+    var isCurrentlyDraggin by mutableStateOf(false)
+        private set
+
+    var items by mutableStateOf(emptyList<PlayerItem>())
+
+
+    fun startDraggin() {
+        isCurrentlyDraggin = true
+    }
+
+    fun stopDraggin() {
+        isCurrentlyDraggin = false
+    }
+
+
+    fun onPlayerSwap(dstarterPlayer: PlayerItem, dbenchPlayer: PlayerItem, team: Team) {
         //put the starter player on the bench and the bench player in the starting lineup in the player position
 
-        team.bench = team.bench?.plus(starterPlayer)
-        team.bench = team.bench?.minus(benchPlayer)
+        val starterPlayer = dstarterPlayer.player!!
+        val benchPlayer = dbenchPlayer.player!!
 
+        var starters: MutableMap<String, Player?> = team.positions.toMutableMap()
+        var theBench: MutableList<Player> = team.bench?.toMutableList() ?: mutableListOf()
 
-        //get the position of the starter player
-        val starterPosition = team.positions.entries.find { it.value == starterPlayer }?.key
+        val positionToUpdate = starters.entries.find { it.value == starterPlayer }?.key
 
-        //put the bench player in the starter position, the positions is a Map<String, Player?>
-        if (starterPosition != null) {
-            team.positions = team.positions.mapValues { entry ->
-                when (entry.value) {
-                    starterPlayer -> {
-                        benchPlayer
-                    }
-                    else -> {
-                        entry.value
-                    }
-                }
-            }
+        //set the position positionToUpdate to becnhPlayer
+        if (positionToUpdate != null) {
+            starters[positionToUpdate] = benchPlayer
         }
 
-        // Update the database using Room
+        theBench.add(starterPlayer)
+        theBench.remove(benchPlayer)
+
+        team.positions = starters
+        team.bench = theBench
+
+//        // Update the database using Room
         updateTeam(team)
     }
 
