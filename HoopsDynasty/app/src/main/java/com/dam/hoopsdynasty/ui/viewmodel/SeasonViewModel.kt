@@ -22,6 +22,7 @@ class SeasonViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+
     fun getSeason(): LiveData<Season?> {
         return repository.getSeason()
     }

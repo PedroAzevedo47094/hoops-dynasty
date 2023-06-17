@@ -22,7 +22,7 @@ data class Team(
         "PF" to null,
         "C" to null
     ),
-    var gameIds: List<String>?, // Store the IDs of the games associated with the team
+    var games: List<Game>?, // Store the IDs of the games associated with the team
     var wins: Int = 0,
     var losses: Int = 0
 

@@ -1,7 +1,6 @@
 package com.dam.hoopsdynasty.ui.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -9,21 +8,20 @@ import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.GameAdapter
 import com.dam.hoopsdynasty.data.ManagerAdapter
 import com.dam.hoopsdynasty.data.PlayerAdapter
+import com.dam.hoopsdynasty.data.SeasonAdapter
 import com.dam.hoopsdynasty.data.TeamAdapter
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Manager
 import com.dam.hoopsdynasty.data.model.Player
+import com.dam.hoopsdynasty.data.model.Season
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.FirestoreAuthRepository
 import com.dam.hoopsdynasty.data.repository.ManagerRepository
-import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.launch
-import java.lang.reflect.Type
-import kotlin.math.log
 
 class ManagerViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -84,6 +82,7 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
             .registerTypeAdapter(Team::class.java, TeamAdapter())
             .registerTypeAdapter(Player::class.java, PlayerAdapter())
             .registerTypeAdapter(Game::class.java, GameAdapter())
+            .registerTypeAdapter(Season::class.java, SeasonAdapter())
             .create()
 
         // Step 2: Convert and backup 'managers' table
@@ -98,11 +97,16 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
             myRef.child("teams").setValue(teamsJson)
         }
 
-//        // Step 4: Convert and backup 'players' table
-//        playerViewModel.getAllPlayers().observe(ProcessLifecycleOwner.get()) { playersList ->
-//            val playersJson = gson.toJson(playersList)
-//            myRef.child("players").setValue(playersJson)
-//        }
+        // Step 4: Convert and backup 'players' table
+        playerViewModel.getAllPlayers().observe(ProcessLifecycleOwner.get()) { playersList ->
+            val playersJson = gson.toJson(playersList)
+            myRef.child("players").setValue(playersJson)
+        }
+
+        seasonViewModel.getSeason().observe(ProcessLifecycleOwner.get()) { season ->
+            val seasonJson = gson.toJson(season)
+            myRef.child("season").setValue(seasonJson)
+        }
 
         // Step 5: Convert and backup 'games' table
 
@@ -136,6 +140,7 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
             .registerTypeAdapter(Team::class.java, TeamAdapter())
             .registerTypeAdapter(Player::class.java, PlayerAdapter())
             .registerTypeAdapter(Game::class.java, GameAdapter())
+            .registerTypeAdapter(Season::class.java, SeasonAdapter())
             .create()
 
         // Read 'managers' data
@@ -160,13 +165,35 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
             }
         }
 
+        // Read 'players' data
+        myRef.child("players").get().addOnSuccessListener { snapshot ->
+            val playersJson = snapshot.value.toString()
+            val playersList = gson.fromJson(playersJson, Array<Player>::class.java).toList()
+            playersList.forEach { player ->
+                viewModelScope.launch {
+                    playerViewModel.insertPlayer(player)
+                }
+            }
+        }
+
+// Read 'season' data
+        myRef.child("season").get().addOnSuccessListener { snapshot ->
+            val seasonJson = snapshot.value.toString()
+            val season = gson.fromJson(seasonJson, Season::class.java)
+
+            viewModelScope.launch {
+                seasonViewModel.insertSeason(season)
+            }
+
+        }
+
         // Read 'games' data
 //        myRef.child("games").get().addOnSuccessListener { snapshot ->
 //            val gamesJson = snapshot.value.toString()
 //            val gamesList = gson.fromJson(gamesJson, Array<Game>::class.java).toList()
-//            gamesList.forEach { game ->
+//            gamesList.forEach { games ->
 //                viewModelScope.launch {
-//                    gameViewModel.insertGame(game)
+//                    gameViewModel.insertGame(games)
 //                }
 //            }
 //        }

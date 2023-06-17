@@ -27,7 +27,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         return repository.getGamesBySeason(season)
     }
 
-    fun getGamesByTeam(team: Team): LiveData<List<Game>> {
+    fun getGamesByTeam(team: String): LiveData<List<Game>> {
         return repository.getGamesByTeam(team)
     }
 

@@ -18,10 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
+import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
@@ -34,6 +36,20 @@ fun TeamLogo(team: Team?, context: Context) {
     Image(
         painter = painterResource(logoResourceId),
         contentDescription = team?.abbreviation,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+}@Composable
+fun TeamLogoABV(abr: String?, context: Context) {
+
+    val abrL = abr?.lowercase(Locale.getDefault())
+    val logo = "@drawable/${abrL}"
+
+    val logoResourceId = context.resources.getIdentifier(logo, "drawable", context.packageName)
+
+    Image(
+        painter = painterResource(logoResourceId),
+        contentDescription = abr,
         modifier = Modifier.fillMaxWidth()
     )
 

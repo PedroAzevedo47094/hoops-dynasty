@@ -3,6 +3,7 @@ package com.dam.hoopsdynasty.data
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Manager
 import com.dam.hoopsdynasty.data.model.Player
+import com.dam.hoopsdynasty.data.model.Season
 import com.dam.hoopsdynasty.data.model.Team
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.JsonDeserializationContext
@@ -45,7 +46,6 @@ class ManagerAdapter : JsonSerializer<Manager>, JsonDeserializer<Manager> {
             team = team)
     }
 }
-
 class TeamAdapter : JsonSerializer<Team>, JsonDeserializer<Team> {
     override fun serialize(src: Team?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
         val jsonObject = JsonObject()
@@ -59,7 +59,7 @@ class TeamAdapter : JsonSerializer<Team>, JsonDeserializer<Team> {
             jsonObject.add("players", context?.serialize(team.players))
             jsonObject.add("bench", context?.serialize(team.bench))
             jsonObject.add("positions", context?.serialize(team.positions))
-            jsonObject.add("gameIds", context?.serialize(team.gameIds))
+            jsonObject.add("games", context?.serialize(team.games))
             jsonObject.addProperty("wins", team.wins)
             jsonObject.addProperty("losses", team.losses)
         }
@@ -77,7 +77,7 @@ class TeamAdapter : JsonSerializer<Team>, JsonDeserializer<Team> {
         val players = context?.deserialize<List<Player>>(jsonObject?.get("players"), object : TypeToken<List<Player>>() {}.type)
         val bench = context?.deserialize<List<Player>>(jsonObject?.get("bench"), object : TypeToken<List<Player>>() {}.type)
         val positions = context?.deserialize<Map<String, Player?>>(jsonObject?.get("positions"), object : TypeToken<Map<String, Player?>>() {}.type)
-        val gameIds = context?.deserialize<List<String>>(jsonObject?.get("gameIds"), object : TypeToken<List<String>>() {}.type)
+        val games = context?.deserialize<List<Game>>(jsonObject?.get("games"), object : TypeToken<List<Game>>() {}.type)
         val wins = jsonObject?.get("wins")?.asInt ?: 0
         val losses = jsonObject?.get("losses")?.asInt ?: 0
 
@@ -91,16 +91,14 @@ class TeamAdapter : JsonSerializer<Team>, JsonDeserializer<Team> {
             players = players,
             positions = positions!!,
             bench = bench,
-            gameIds = mutableListOf(),
-            wins = 0,
-            losses = 0
-
-
+            games = games,
+            wins = wins,
+            losses = losses
         )
+
         return team
     }
 }
-
 class PlayerAdapter : JsonSerializer<Player>, JsonDeserializer<Player> {
     override fun serialize(src: Player?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
         val jsonObject = JsonObject()
@@ -180,7 +178,6 @@ class PlayerAdapter : JsonSerializer<Player>, JsonDeserializer<Player> {
         return player
     }
 }
-
 class GameAdapter : JsonSerializer<Game>, JsonDeserializer<Game> {
     override fun serialize(src: Game?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
         val jsonObject = JsonObject()
@@ -188,8 +185,8 @@ class GameAdapter : JsonSerializer<Game>, JsonDeserializer<Game> {
             jsonObject.addProperty("id", game.id)
             jsonObject.addProperty("season", game.season)
             jsonObject.addProperty("arena", game.arena)
-            jsonObject.add("homeTeam", context?.serialize(game.homeTeam))
-            jsonObject.add("awayTeam", context?.serialize(game.awayTeam))
+            jsonObject.addProperty("homeTeamId", game.homeTeamId)
+            jsonObject.addProperty("awayTeamId", game.awayTeamId)
             jsonObject.addProperty("homeScore", game.homeScore)
             jsonObject.addProperty("awayScore", game.awayScore)
             jsonObject.add("homeStarters", context?.serialize(game.homeStarters))
@@ -207,30 +204,74 @@ class GameAdapter : JsonSerializer<Game>, JsonDeserializer<Game> {
         val id = jsonObject?.get("id")?.asInt ?: 0
         val season = jsonObject?.get("season")?.asInt ?: 0
         val arena = jsonObject?.get("arena")?.asString ?: ""
-        val homeTeam = context?.deserialize<Team>(jsonObject?.get("homeTeam"), Team::class.java)
-        val awayTeam = context?.deserialize<Team>(jsonObject?.get("awayTeam"), Team::class.java)
+        val homeTeamId = jsonObject?.get("homeTeamId")?.asString ?: ""
+        val awayTeamId = jsonObject?.get("awayTeamId")?.asString ?: ""
         val homeScore = jsonObject?.get("homeScore")?.asInt ?: 0
         val awayScore = jsonObject?.get("awayScore")?.asInt ?: 0
         val homeStarters = context?.deserialize<List<Player>>(jsonObject?.get("homeStarters"), object : TypeToken<List<Player>>() {}.type)
         val awayStarters = context?.deserialize<List<Player>>(jsonObject?.get("awayStarters"), object : TypeToken<List<Player>>() {}.type)
         val homeBenchedPlayers = context?.deserialize<List<Player>>(jsonObject?.get("homeBenchedPlayers"), object : TypeToken<List<Player>>() {}.type)
         val awayBenchedPlayers = context?.deserialize<List<Player>>(jsonObject?.get("awayBenchedPlayers"), object : TypeToken<List<Player>>() {}.type)
-        val winner = context?.deserialize<Team>(jsonObject?.get("winner"), Team::class.java)
-        val loser = context?.deserialize<Team>(jsonObject?.get("loser"), Team::class.java)
+        val winner = context?.deserialize<String>(jsonObject?.get("winner"), String::class.java)
+        val loser = context?.deserialize<String>(jsonObject?.get("loser"), String::class.java)
 
         return Game(
-            season = 1,
-            arena = homeTeam!!.arena,
-            homeTeam = homeTeam,
-            awayTeam = awayTeam!!,
-            homeScore = 0,
-            awayScore = 0,
-            homeStarters = null,
-            awayStarters = null,
-            homeBenchedPlayers = null,
-            awayBenchedPlayers = null,
-            winner = null,
-            loser = null
+            id = id,
+            season = season,
+            arena = arena,
+            homeTeamId = homeTeamId,
+            awayTeamId = awayTeamId,
+            homeScore = homeScore,
+            awayScore = awayScore,
+            homeStarters = homeStarters,
+            awayStarters = awayStarters,
+            homeBenchedPlayers = homeBenchedPlayers,
+            awayBenchedPlayers = awayBenchedPlayers,
+            winner = winner,
+            loser = loser
+        )
+    }
+
+}
+
+class SeasonAdapter : JsonSerializer<Season>, JsonDeserializer<Season> {
+    override fun serialize(src: Season?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement {
+        val jsonObject = JsonObject()
+        src?.let { season ->
+            jsonObject.addProperty("id", season.id)
+            jsonObject.add("teams", context?.serialize(null))
+            jsonObject.add("players", context?.serialize(null))
+            jsonObject.add("tradeList", context?.serialize(season.tradeList))
+            jsonObject.add("schedule", context?.serialize(null))
+            jsonObject.add("standings", context?.serialize(null))
+            jsonObject.add("playoffs", context?.serialize(null))
+            jsonObject.add("currentRound", context?.serialize(null))
+        }
+        return jsonObject
+    }
+
+    override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Season {
+        val jsonObject = json?.asJsonObject
+        val id = jsonObject?.get("id")?.asInt ?: 0
+        val teams = context?.deserialize<List<Team>>(jsonObject?.get("teams"), object : TypeToken<List<Team>>() {}.type)
+        val players = context?.deserialize<List<Player>>(jsonObject?.get("players"), object : TypeToken<List<Player>>() {}.type)
+        val tradeList = context?.deserialize<List<Player>>(jsonObject?.get("tradeList"), object : TypeToken<List<Player>>() {}.type)
+        val schedule = context?.deserialize<List<Game>>(jsonObject?.get("schedule"), object : TypeToken<List<Game>>() {}.type)
+        val standings = jsonObject?.get("standings")?.asString ?: ""
+        val playoffs = jsonObject?.get("playoffs")?.asString ?: ""
+        val currentRound = jsonObject?.get("currentRound")?.asInt ?: 0
+
+
+        return Season(
+            id = id,
+            teams = teams,
+            players = players,
+            tradeList = tradeList!!,
+            schedule = schedule,
+            standings = standings,
+            playoffs = playoffs,
+            currentRound = currentRound
+
         )
     }
 }

@@ -20,13 +20,13 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE season = :season")
     fun getGamesBySeason(season: Int): LiveData<List<Game>>
 
-    @Query("SELECT * FROM games WHERE homeTeam = :team OR awayTeam = :team")
-    fun getGamesByTeam(team: Team): LiveData<List<Game>>
+    @Query("SELECT * FROM games WHERE homeTeamId = :team OR awayTeamId = :team")
+    fun getGamesByTeam(team: String): LiveData<List<Game>>
 
-    @Query("SELECT * FROM games WHERE homeTeam = :team")
+    @Query("SELECT * FROM games WHERE homeTeamId = :team")
     fun getHomeGamesByTeam(team: String): LiveData<List<Game>>
 
-    @Query("SELECT * FROM games WHERE awayTeam = :team")
+    @Query("SELECT * FROM games WHERE awayTeamId = :team")
     fun getAwayGamesByTeam(team: String): LiveData<List<Game>>
 
     @Query("SELECT * FROM games WHERE winner = :team")

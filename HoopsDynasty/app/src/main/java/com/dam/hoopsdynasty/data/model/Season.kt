@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 @Entity (tableName = "seasons")
 data class Season(
     @PrimaryKey val id: Int = 1,
-    val teams: List<Team>,
-    val players: List<Player>,
+    val teams: List<Team>?,
+    val players: List<Player>?,
     val tradeList: List<Player>,
     val schedule: List<Game>?,
     val standings: String?,
     val playoffs: String?,
-    val currentRound: Int,
+    val currentRound: Int?,
 )

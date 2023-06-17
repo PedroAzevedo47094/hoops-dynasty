@@ -9,14 +9,14 @@ data class Game(
     val id: Int = 0, // Set a default value of 0 to enable auto-increment
     val season: Int,
     val arena: String,
-    val homeTeam: Team,
-    val awayTeam: Team,
+    val homeTeamId: String,
+    val awayTeamId: String,
     val homeScore: Int,
     val awayScore: Int,
     val homeStarters: List<Player>?,
     val awayStarters: List<Player>?,
     val homeBenchedPlayers: List<Player>?,
     val awayBenchedPlayers: List<Player>?,
-    val winner: Team?,
-    val loser: Team?
+    val winner: String?,
+    val loser: String?
 )

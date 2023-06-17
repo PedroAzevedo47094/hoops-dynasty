@@ -1,4 +1,4 @@
-package com.dam.hoopsdynasty.ui.view
+package com.dam.hoopsdynasty.ui.view.homeOptions
 
 
 import android.content.Context

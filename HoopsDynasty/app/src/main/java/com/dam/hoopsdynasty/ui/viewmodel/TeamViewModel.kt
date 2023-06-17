@@ -11,7 +11,7 @@ import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.TeamRepository
-import com.dam.hoopsdynasty.ui.view.PlayerItem
+import com.dam.hoopsdynasty.ui.view.homeOptions.PlayerItem
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 

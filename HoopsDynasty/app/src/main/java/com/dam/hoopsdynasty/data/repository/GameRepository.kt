@@ -22,7 +22,7 @@ class GameRepository(private val gameDao: GameDao) {
         return gameDao.getGamesBySeason(season)
     }
 
-    fun getGamesByTeam(team: Team): LiveData<List<Game>> {
+    fun getGamesByTeam(team: String): LiveData<List<Game>> {
         return gameDao.getGamesByTeam(team)
     }
 

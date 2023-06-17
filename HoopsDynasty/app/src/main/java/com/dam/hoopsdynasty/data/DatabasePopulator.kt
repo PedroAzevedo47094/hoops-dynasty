@@ -323,7 +323,7 @@ object DataPopulator {
                         players = pl,
                         positions = starters,
                         bench = bench,
-                        gameIds = mutableListOf(),
+                        games = mutableListOf(),
                         wins = 0,
                         losses = 0
 
@@ -553,8 +553,8 @@ object DataPopulator {
         return Game(
             season = 1,
             arena = homeTeam.arena,
-            homeTeam = homeTeam,
-            awayTeam = awayTeam,
+            homeTeamId = homeTeam.abbreviation,
+            awayTeamId = awayTeam.abbreviation,
             homeScore = 0,
             awayScore = 0,
             homeStarters = null,
@@ -579,18 +579,20 @@ object DataPopulator {
         )
     }
 
-   /* private suspend fun addGamesToTeams(teams: List<Team>, gameDao: GameDao): List<Team> {
+    private fun addGamesToTeams(teams: List<Team>, games: List<Game>?): List<Team> {
+
         teams.forEach { team ->
-            gameDao.getAllGames().forEach {game ->
-                if (game.homeTeam == team || game.awayTeam == team) {
-                    team.gameIds += game.id.toString()
+            val teamGames = mutableListOf<Game>()
+            games?.forEach { game ->
+                if (game.homeTeamId == team.abbreviation || game.awayTeamId == team.abbreviation) {
+                    teamGames.add(game)
                 }
             }
-
+            team.games = teamGames
         }
 
         return teams
-    }*/
+    }
 
     private fun generateShortSchedule(teams: List<Team>): List<Game>{
         var shortSchedule = mutableListOf<Game>()
@@ -622,11 +624,11 @@ object DataPopulator {
             val gamesList = generateShortSchedule(teams) // Generate games for the teams
             database.gameDao().insertAllGames(gamesList) // Insert games into the database
 
-           /* val teamsWithGames = addGamesToTeams(teams, database.gameDao()) // Add the games to the teams
+            val teamsWithGames = addGamesToTeams(teams, gamesList) // Add the games to the teams
 
             teamsWithGames.forEach { team ->
                 database.teamDao().updateTeam(team)
-            }*/
+            }
 
         }
     }

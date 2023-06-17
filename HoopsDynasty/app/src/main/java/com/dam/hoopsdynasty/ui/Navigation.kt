@@ -10,7 +10,8 @@ import androidx.navigation.navArgument
 import com.dam.hoopsdynasty.ui.view.HomeView
 import com.dam.hoopsdynasty.ui.view.Register_Login.ManagerInfo
 import com.dam.hoopsdynasty.ui.view.Register_Login.SelectTeam
-import com.dam.hoopsdynasty.ui.view.RosterView
+import com.dam.hoopsdynasty.ui.view.homeOptions.RosterView
+import com.dam.hoopsdynasty.ui.view.homeOptions.TradeView
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
 @Composable
@@ -54,6 +55,9 @@ fun Navigation() {
             HomeView(mainViewModel = viewModel, navController = navController)
         }
 
+        composable(route = Screen.TradeScreen.route) {
+            TradeView(mainViewModel = viewModel, navController = navController)
+        }
 
     }
 }
