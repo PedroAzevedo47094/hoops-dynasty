@@ -1,5 +1,6 @@
 package com.dam.hoopsdynasty.ui.view.Register_Login
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,8 +43,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.dam.hoopsdynasty.ui.Screen
+import com.dam.hoopsdynasty.ui.activities.PreloadActivity
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
 
@@ -198,6 +201,8 @@ fun ManagerRegister(viewModel: MainViewModel, navController: NavController) {
                             //TODO: register manager
 
                             navController.navigate(Screen.SelectTeamScreen.withArgs(email, name, password))
+
+
                         }
                     },
                     modifier = Modifier.padding(

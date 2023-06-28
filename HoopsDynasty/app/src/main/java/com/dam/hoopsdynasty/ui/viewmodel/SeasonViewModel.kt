@@ -16,6 +16,7 @@ class SeasonViewModel(application: Application) : AndroidViewModel(application) 
     private val repository: SeasonRepository =
         SeasonRepository(HoopsDynastyDatabase.getDatabase(application).seasonDao())
 
+
     fun insertSeason(season: Season) {
         viewModelScope.launch {
             repository.insertSeason(season)

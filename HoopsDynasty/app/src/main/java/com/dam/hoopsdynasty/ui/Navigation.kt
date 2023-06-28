@@ -11,6 +11,7 @@ import com.dam.hoopsdynasty.ui.view.HomeView
 import com.dam.hoopsdynasty.ui.view.Register_Login.ManagerInfo
 import com.dam.hoopsdynasty.ui.view.Register_Login.SelectTeam
 import com.dam.hoopsdynasty.ui.view.homeOptions.RosterView
+import com.dam.hoopsdynasty.ui.view.homeOptions.StandingsView
 import com.dam.hoopsdynasty.ui.view.homeOptions.TradeView
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
@@ -57,6 +58,10 @@ fun Navigation() {
 
         composable(route = Screen.TradeScreen.route) {
             TradeView(mainViewModel = viewModel, navController = navController)
+        }
+
+        composable(route = Screen.StandingsScreen.route) {
+            StandingsView(mainViewModel = viewModel, navController = navController)
         }
 
     }

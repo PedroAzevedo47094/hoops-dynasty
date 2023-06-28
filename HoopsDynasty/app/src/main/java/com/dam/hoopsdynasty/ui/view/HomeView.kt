@@ -49,6 +49,7 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
     val team: Team? = teamLiveData.value
 
 
+
     Column {
 
         Row() {
@@ -356,7 +357,7 @@ fun Calendar(navController: NavController) {
 fun Standings(navController: NavController) {
 
     TextButton(
-        onClick = { navController.navigate("") },
+        onClick = { navController.navigate("standings") },
         modifier = Modifier
             .padding(2.dp)
             .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))

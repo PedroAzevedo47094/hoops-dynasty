@@ -20,7 +20,11 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
     private val repository: TeamRepository =
         TeamRepository(HoopsDynastyDatabase.getDatabase(application).teamDao())
 
-    val teams: LiveData<List<Team>> = repository.teams
+    private val teams: LiveData<List<Team>> = repository.getAllTeams()
+
+    private var standings: List<Team> = mutableListOf()
+
+    //val teams: LiveData<List<Team>> = repository.teams
 
     fun getTeam(abbreviation: String?): LiveData<Team> {
         return repository.getTeam(abbreviation)
@@ -67,6 +71,9 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
         updateTeam(team)
     }
 
+
+
+
     fun getTeamsByConference(conference: String): LiveData<List<Team>> {
         return repository.getTeamsByConference(conference)
     }
@@ -95,4 +102,6 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
         viewModelScope.cancel()
     }
+
+
 }
