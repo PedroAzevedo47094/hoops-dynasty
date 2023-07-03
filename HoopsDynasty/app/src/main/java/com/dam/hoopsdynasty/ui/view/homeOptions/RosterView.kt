@@ -26,6 +26,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.dam.hoopsdynasty.R
+import com.dam.hoopsdynasty.data.model.Manager
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.ui.DragTarget
@@ -70,9 +74,15 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
     val teamLiveData = teamViewModel.getTeam(teamAbr).observeAsState()
     val team: Team? = teamLiveData.value
 
+
     val starters = team?.positions
 
     val bench = team?.bench
+
+
+
+
+
 
     DraggableScreen {
 
@@ -163,7 +173,8 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                             starters = starters,
                             context = context,
                             teamViewModel = teamViewModel,
-                            team = team!!
+                            team = team!!,
+                            manager = theManager!!
                         )
                     }
 
@@ -191,10 +202,6 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                         )
                     }
 
-
-//                    Box(){
-//                        Text(text = )
-//                    }
                 }
             }
 
@@ -221,7 +228,8 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                         bench = bench,
                         context = context,
                         teamViewModel = teamViewModel,
-                        team = team!!
+                        team = team!!,
+                        manager = theManager!!
                     )
                 }
             }
@@ -235,9 +243,11 @@ fun Starters(
     starters: Map<String, Player?>?,
     context: Context,
     teamViewModel: TeamViewModel,
-    team: Team
-) {
+    team: Team,
+    manager: Manager,
 
+) {
+    val items = remember { mutableStateListOf<PlayerItem>() }
     //space
     Spacer(modifier = Modifier.height(8.dp))
 
@@ -250,43 +260,50 @@ fun Starters(
         val PF = starters?.get("PF")
 
         val pl1 = PlayerItem(player = C, position = C?.position1)
+        items.add(pl1)
         teamViewModel.items = teamViewModel.items.plus(pl1)
+
         DropItem<PlayerItem>(modifier = Modifier) { isInBound, playerItem ->
             if (playerItem != null) {
                 teamViewModel.onPlayerSwap(
                     dstarterPlayer = pl1,
                     dbenchPlayer = playerItem,
-                    team = team
+                    manager = manager
                 )
+
             }
-//            DragTarget(
-//                dataToDrop = pl1,
-//                viewModel = teamViewModel
-//            ) {
+
+            DragTarget(
+                dataToDrop = pl1,
+                viewModel = teamViewModel
+            ) {
             Box() {
                 PlayerImageWithValue(player = C, context = context)
             }
-//            }
+            }
         }
 
         val pl2 = PlayerItem(player = PF, position = PF?.position1)
+        items.add(pl2)
         teamViewModel.items = teamViewModel.items.plus(pl2)
         DropItem<PlayerItem>(modifier = Modifier) { isInBound, playerItem ->
             if (playerItem != null) {
                 teamViewModel.onPlayerSwap(
                     dstarterPlayer = pl2,
                     dbenchPlayer = playerItem,
-                    team = team
+                    manager = manager
                 )
             }
-//            DragTarget(
-//                dataToDrop = pl2,
-//                viewModel = teamViewModel
-//            ) {
+
+
+            DragTarget(
+                dataToDrop = pl2,
+                viewModel = teamViewModel
+            ) {
             Box() {
                 PlayerImageWithValue(player = PF, context = context)
             }
-//            }
+            }
         }
 
     }
@@ -299,43 +316,47 @@ fun Starters(
         val SG = starters?.get("SG")
 
         val pl3 = PlayerItem(player = SF, position = SF?.position1)
+        items.add(pl3)
         teamViewModel.items = teamViewModel.items.plus(pl3)
         DropItem<PlayerItem>(modifier = Modifier) { isInBound, playerItem ->
             if (playerItem != null) {
                 teamViewModel.onPlayerSwap(
                     dstarterPlayer = pl3,
                     dbenchPlayer = playerItem,
-                    team = team
+                    manager = manager
                 )
             }
-//            DragTarget(
-//                dataToDrop = pl3,
-//                viewModel = teamViewModel
-//            ) {
+
+            DragTarget(
+                dataToDrop = pl3,
+                viewModel = teamViewModel
+            ) {
             Box() {
                 PlayerImageWithValue(player = SF, context = context)
             }
-//            }
+            }
         }
 
         val pl4 = PlayerItem(player = SG, position = SG?.position1)
+        items.add(pl4)
         teamViewModel.items = teamViewModel.items.plus(pl4)
         DropItem<PlayerItem>(modifier = Modifier) { isInBound, playerItem ->
             if (playerItem != null) {
                 teamViewModel.onPlayerSwap(
                     dstarterPlayer = pl4,
                     dbenchPlayer = playerItem,
-                    team = team
+                    manager = manager
                 )
             }
-//            DragTarget(
-//                dataToDrop = pl4,
-//                viewModel = teamViewModel
-//            ) {
+
+            DragTarget(
+                dataToDrop = pl4,
+                viewModel = teamViewModel
+            ) {
             Box() {
                 PlayerImageWithValue(player = SG, context = context)
             }
-//            }
+            }
         }
     }
 
@@ -346,6 +367,7 @@ fun Starters(
         val PG = starters?.get("PG")
 
         val pl5 = PlayerItem(player = PG, position = PG?.position1)
+        items.add(pl5)
         teamViewModel.items = teamViewModel.items.plus(pl5)
 
         DropItem<PlayerItem>(modifier = Modifier) { isInBound, playerItem ->
@@ -353,17 +375,18 @@ fun Starters(
                 teamViewModel.onPlayerSwap(
                     dstarterPlayer = pl5,
                     dbenchPlayer = playerItem,
-                    team = team
+                    manager = manager
                 )
             }
-//            DragTarget(
-//                dataToDrop = pl5,
-//                viewModel = teamViewModel
-//            ) {
+
+            DragTarget(
+                dataToDrop = pl5,
+                viewModel = teamViewModel
+            ) {
             Box() {
                 PlayerImageWithValue(player = PG, context = context)
             }
-//            }
+            }
         }
     }
 
@@ -372,8 +395,14 @@ fun Starters(
 
 
 @Composable
-fun Bench(bench: List<Player>?, context: Context, teamViewModel: TeamViewModel, team: Team) {
-
+fun Bench(
+    bench: List<Player>?,
+    context: Context,
+    teamViewModel: TeamViewModel,
+    team: Team,
+    manager: Manager
+) {
+    val items = remember { mutableStateListOf<PlayerItem>() }
 
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
@@ -392,13 +421,14 @@ fun Bench(bench: List<Player>?, context: Context, teamViewModel: TeamViewModel, 
                 ) {
                     row.forEach { player ->
                         val pl = PlayerItem(player = player, position = player.position1)
+                        items.add(pl)
                         //teamViewModel.items = teamViewModel.items.plus(pl)
                         DropItem<PlayerItem>(modifier = Modifier.fillMaxHeight()) { isInBound, playerItem ->
                             if (playerItem != null) {
                                 teamViewModel.onPlayerSwap(
                                     dstarterPlayer = playerItem,
                                     dbenchPlayer = pl,
-                                    team = team
+                                    manager = manager
                                 )
                             }
 

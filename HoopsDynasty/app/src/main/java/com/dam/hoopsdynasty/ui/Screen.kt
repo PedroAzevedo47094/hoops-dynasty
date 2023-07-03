@@ -9,8 +9,12 @@ sealed class Screen(val route: String){
     object TradeScreen : Screen("trade")
 
     object StandingsScreen : Screen("standings")
+
+    object CalendarScreen : Screen("calendar")
+
     object HomeScreen : Screen("home")
 
+    object GameScreen : Screen("game")
 
     fun withArgs(vararg args: String): String {
         return buildString {

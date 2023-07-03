@@ -2,6 +2,7 @@ package com.dam.hoopsdynasty.ui.view.reusableComposables
 
 import android.content.Context
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -134,7 +136,8 @@ fun PlayerRating(Rating: Int?, context: Context) {
     }
 
 
-    Box(modifier = Modifier.size(50.dp)) {
+    Box(modifier = Modifier.size(50.dp)
+        ) {
         Image(
             painter = painterResource(R.drawable.ball),
             contentDescription = "ball",
@@ -144,10 +147,13 @@ fun PlayerRating(Rating: Int?, context: Context) {
         Text(
             text = Rating.toString(),
             fontWeight = FontWeight.Bold,
-            color = Color.White,
+            color = Color.Black,
             fontSize = 19.sp,
             modifier = Modifier
                 .align(Alignment.Center)
+                .background(
+                    Color(0xFFD9D9D9).copy(alpha = 0.3f)
+                )
         )
     }
 

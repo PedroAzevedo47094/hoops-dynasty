@@ -9,6 +9,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val gameViewModel: GameViewModel
     val teamViewModel: TeamViewModel
     val seasonViewModel: SeasonViewModel
+    val gamesSimulationViewModel: GamesSimulationViewModel
 
     init {
         managerViewModel = ManagerViewModel(application)
@@ -16,6 +17,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         gameViewModel = GameViewModel(application)
         teamViewModel = TeamViewModel(application)
         seasonViewModel = SeasonViewModel(application)
+        gamesSimulationViewModel = GamesSimulationViewModel(application)
     }
 
 

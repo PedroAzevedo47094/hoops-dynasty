@@ -1,6 +1,7 @@
 package com.dam.hoopsdynasty.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
+import com.dam.hoopsdynasty.data.model.Manager
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.TeamRepository
@@ -35,9 +37,12 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
 
     var items by mutableStateOf(emptyList<PlayerItem>())
 
+    val managerViewModel: ManagerViewModel = ManagerViewModel(application)
+
 
     fun startDraggin() {
         isCurrentlyDraggin = true
+        isSwamped = false
     }
 
     fun stopDraggin() {
@@ -45,8 +50,27 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun onPlayerSwap(dstarterPlayer: PlayerItem, dbenchPlayer: PlayerItem, team: Team) {
+     fun calculateStarters(team: Team?): Map<String, Player?>? {
+        return team?.positions
+    }
+
+     fun calculateBench(team: Team?): List<Player>? {
+        return team?.bench
+    }
+
+    var isSwamped = false
+
+    fun onPlayerSwap(dstarterPlayer: PlayerItem, dbenchPlayer: PlayerItem, manager: Manager) {
         //put the starter player on the bench and the bench player in the starting lineup in the player position
+        if (isSwamped) {
+            return // Function already executed, do nothing
+        }
+
+        dbenchPlayer.player?.let { Log.d("PlayerSwap", it.firstName) }
+
+        val team = manager.team!!
+
+
 
         val starterPlayer = dstarterPlayer.player!!
         val benchPlayer = dbenchPlayer.player!!
@@ -58,21 +82,36 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
 
         //set the position positionToUpdate to becnhPlayer
         if (positionToUpdate != null) {
-            starters[positionToUpdate] = benchPlayer
+            starters[positionToUpdate] = null
         }
 
-        theBench.add(starterPlayer)
         theBench.remove(benchPlayer)
+
+        if (positionToUpdate != null) {
+            starters[positionToUpdate] = benchPlayer
+        }
+        theBench.add(starterPlayer)
 
         team.positions = starters
         team.bench = theBench
+        manager.team = team
+
 
 //        // Update the database using Room
+
         updateTeam(team)
+        managerViewModel.updateManager(manager)
+        theBench.forEachIndexed { index, player ->
+            Log.d("PlayerSwap", "Bench Player ${index + 1}: $player")
+        }
+        isSwamped = true
+
     }
 
 
-
+    fun updateTeam(team: Team) = viewModelScope.launch {
+        repository.updateTeam(team)
+    }
 
     fun getTeamsByConference(conference: String): LiveData<List<Team>> {
         return repository.getTeamsByConference(conference)
@@ -88,10 +127,6 @@ class TeamViewModel(application: Application) : AndroidViewModel(application) {
 
     fun insertTeam(team: Team) = viewModelScope.launch {
         repository.insertTeam(team)
-    }
-
-    fun updateTeam(team: Team) = viewModelScope.launch {
-        repository.updateTeam(team)
     }
 
     fun insertAllTeams(teams: List<Team>) = viewModelScope.launch {

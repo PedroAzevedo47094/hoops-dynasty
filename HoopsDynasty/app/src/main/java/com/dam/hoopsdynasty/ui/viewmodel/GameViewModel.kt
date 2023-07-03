@@ -3,10 +3,12 @@ package com.dam.hoopsdynasty.ui.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.dam.hoopsdynasty.data.database.HoopsDynastyDatabase
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.data.repository.GameRepository
+import kotlinx.coroutines.launch
 
 class GameViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -55,7 +57,7 @@ class GameViewModel(application: Application) : AndroidViewModel(application) {
         repository.insertAllGames(games)
     }
 
-    suspend fun updateGame(game: Game) {
+    fun updateGame(game: Game) = viewModelScope.launch {
         repository.updateGame(game)
     }
 

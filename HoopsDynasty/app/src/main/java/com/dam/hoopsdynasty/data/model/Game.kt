@@ -11,12 +11,12 @@ data class Game(
     val arena: String,
     val homeTeamId: String,
     val awayTeamId: String,
-    val homeScore: Int,
-    val awayScore: Int,
+    var homeScore: Int,
+    var awayScore: Int,
     val homeStarters: List<Player>?,
     val awayStarters: List<Player>?,
     val homeBenchedPlayers: List<Player>?,
     val awayBenchedPlayers: List<Player>?,
-    val winner: String?,
-    val loser: String?
+    var winner: String?,
+    var loser: String?
 )

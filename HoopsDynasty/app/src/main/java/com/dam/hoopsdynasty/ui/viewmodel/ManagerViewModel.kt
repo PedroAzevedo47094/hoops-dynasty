@@ -108,6 +108,11 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
             myRef.child("season").setValue(seasonJson)
         }
 
+        gameViewModel.getAllGames().observe(ProcessLifecycleOwner.get()) { gamesList ->
+            val gamesJson = gson.toJson(gamesList)
+            myRef.child("games").setValue(gamesJson)
+        }
+
         // Step 5: Convert and backup 'games' table
 
 //        val games = gameViewModel.getAllGames().value
@@ -210,6 +215,11 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+
+
+    fun updateManager(manager: Manager) = viewModelScope.launch {
+        managerRepository.updateManager(manager)
+    }
 
     fun logoutUser() {
         authViewModel.logoutUser()

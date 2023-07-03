@@ -1,6 +1,7 @@
 package com.dam.hoopsdynasty.ui.view
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,7 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.dam.hoopsdynasty.R
+import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Team
+import com.dam.hoopsdynasty.ui.Screen
 import com.dam.hoopsdynasty.ui.view.reusableComposables.PlayerImage
 import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogoABV
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
@@ -191,6 +194,17 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
 
         Spacer(modifier = Modifier.padding(space))
 
+        val nextGames = team?.games
+        var nextGame = nextGames?.get(0)
+
+        nextGames?.forEach { game ->
+            if (game.winner == null) {
+                nextGame = game
+                return@forEach
+            }
+        }
+
+        Log.d("HomeView", "GameId: $nextGame.id")
         Row() {
             Box(
                 modifier = Modifier
@@ -198,7 +212,7 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
                     .align(Alignment.CenterVertically)
             ) {
                 TextButton(
-                    onClick = { navController.navigate("roster") },
+                    onClick = { navController.navigate("game") },
                     modifier = Modifier
                         .padding(2.dp)
                         .fillMaxWidth()
@@ -209,6 +223,7 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
                             mainViewModel = mainViewModel,
                             navController = navController,
                             team = team,
+                            nextGame = nextGame!!,
                             context = context
                         )
                     }
@@ -224,19 +239,12 @@ fun NextGame(
     mainViewModel: MainViewModel,
     navController: NavController,
     team: Team,
+    nextGame : Game,
     context: Context
 ) {
 
 
-    val nextGames = team.games
-    var nextGame = nextGames?.get(0)
 
-    nextGames?.forEach { game ->
-        if (game.winner == null) {
-            nextGame = game
-            return@forEach
-        }
-    }
 
 
     val homeTeam = nextGame?.homeTeamId
@@ -332,7 +340,7 @@ fun TeamManagment(team: Team, context: Context) {
 @Composable
 fun Calendar(navController: NavController) {
     TextButton(
-        onClick = { navController.navigate("") },
+        onClick = { navController.navigate("calendar") },
         modifier = Modifier
             .padding(2.dp)
             .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))

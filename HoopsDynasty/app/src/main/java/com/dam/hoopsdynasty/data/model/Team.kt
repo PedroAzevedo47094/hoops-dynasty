@@ -1,6 +1,7 @@
 package com.dam.hoopsdynasty.data.model
 
 
+import androidx.compose.runtime.MutableState
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -25,7 +26,4 @@ data class Team(
     var games: List<Game>?, // Store the IDs of the games associated with the team
     var wins: Int = 0,
     var losses: Int = 0
-
-
-
 )

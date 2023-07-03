@@ -10,6 +10,8 @@ import androidx.navigation.navArgument
 import com.dam.hoopsdynasty.ui.view.HomeView
 import com.dam.hoopsdynasty.ui.view.Register_Login.ManagerInfo
 import com.dam.hoopsdynasty.ui.view.Register_Login.SelectTeam
+import com.dam.hoopsdynasty.ui.view.homeOptions.CalendarView
+import com.dam.hoopsdynasty.ui.view.homeOptions.GameView
 import com.dam.hoopsdynasty.ui.view.homeOptions.RosterView
 import com.dam.hoopsdynasty.ui.view.homeOptions.StandingsView
 import com.dam.hoopsdynasty.ui.view.homeOptions.TradeView
@@ -62,6 +64,19 @@ fun Navigation() {
 
         composable(route = Screen.StandingsScreen.route) {
             StandingsView(mainViewModel = viewModel, navController = navController)
+        }
+
+        composable(route = Screen.CalendarScreen.route) {
+            CalendarView(mainViewModel = viewModel, navController = navController)
+        }
+
+
+
+        composable(route = Screen.GameScreen.route){
+            GameView(
+                mainViewModel = viewModel,
+                navController = navController,
+                )
         }
 
     }
