@@ -50,7 +50,7 @@ class GamesSimulationViewModel(application: Application) : AndroidViewModel(appl
 //        theGameSimulation = gameSimulation
 //    }
 
-    fun setGameIsOver(gameIsOver: Boolean, winner: String?, winnerTeam: Team) {
+    fun setGameIsOver(gameIsOver: Boolean, winner: String?, winnerTeam: Team?) {
         _gameIsOver.value = gameIsOver
         _winner.value = winner
         _winnerTeam.value = winnerTeam
@@ -73,8 +73,8 @@ class GamesSimulationViewModel(application: Application) : AndroidViewModel(appl
         _homeScore.value = theHomeScore
         _awayScore.value = theAwayScore
 
-        Log.d("GameSimulation", "updateScores: homeScore = $theHomeScore, awayScore = $theAwayScore")
-        Log.d("GameSimulation", "updateScores: homeScore = ${homeScore.value}, awayScore = ${awayScore.value}")
+//        Log.d("GameSimulation", "updateScores: homeScore = $theHomeScore, awayScore = $theAwayScore")
+//        Log.d("GameSimulation", "updateScores: homeScore = ${homeScore.value}, awayScore = ${awayScore.value}")
 
     }
 

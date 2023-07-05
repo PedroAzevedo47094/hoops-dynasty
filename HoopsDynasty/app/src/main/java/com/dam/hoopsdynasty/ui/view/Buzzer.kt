@@ -35,6 +35,7 @@ import androidx.navigation.NavController
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogo
+import com.dam.hoopsdynasty.ui.viewmodel.GamesSimulationViewModel
 import com.dam.hoopsdynasty.ui.viewmodel.ManagerViewModel
 import com.dam.hoopsdynasty.ui.viewmodel.TeamViewModel
 
@@ -45,6 +46,7 @@ fun BuzzerView(
     game: Game,
     teamViewModel: TeamViewModel,
     managerViewModel: ManagerViewModel,
+    gamesSimulationViewModel: GamesSimulationViewModel,
     navController: NavController
 ) {
 
@@ -92,14 +94,14 @@ fun BuzzerView(
                         onClick = {
 
 
-                            val mutableHGames: MutableList<Game> = homeTeam.games!!.toMutableList()
-                            mutableHGames.remove(game)
+                            val mutableHGames: MutableList<Int> = homeTeam.games!!.toMutableList()
+                            mutableHGames.remove(game.id)
 
-                            awayTeam.games = mutableHGames.toList()
+                            homeTeam.games = mutableHGames.toList()
 
 
-                            val mutableAGames: MutableList<Game> = awayTeam.games!!.toMutableList()
-                            mutableAGames.remove(game)
+                            val mutableAGames: MutableList<Int> = awayTeam.games!!.toMutableList()
+                            mutableAGames.remove(game.id)
 
                             awayTeam.games = mutableAGames.toList()
 
@@ -108,7 +110,6 @@ fun BuzzerView(
                             teamViewModel.updateTeam(homeTeam)
                             teamViewModel.updateTeam(awayTeam)
                             theManager?.let { managerViewModel.updateManager(it.copy(team = if (homeTeam == managerTeam) homeTeam else awayTeam)) }
-
                             navController.navigate("home")
                         },
                         colors = ButtonDefaults.textButtonColors(
@@ -140,7 +141,7 @@ fun FinalGameScore(
     context: Context
 ) {
 
-    val fontSize = if(awayScore >= 100 && homeScore >= 100) 36 else 40
+    val fontSize = if (awayScore >= 100 && homeScore >= 100) 36 else 40
     Row(
         modifier = Modifier
             .fillMaxWidth()

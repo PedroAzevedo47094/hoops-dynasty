@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogo
 import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogoABV
@@ -46,6 +47,8 @@ fun CalendarView(mainViewModel: MainViewModel, navController: NavController) {
 
     val teamLiveData = teamViewModel.getTeam(teamAbr).observeAsState()
     val team: Team? = teamLiveData.value
+
+    val gameViewModel = mainViewModel.gameViewModel
 
     Column() {
 
@@ -117,10 +120,11 @@ fun CalendarView(mainViewModel: MainViewModel, navController: NavController) {
             columns = GridCells.Adaptive(minSize = 80.dp)
         ) {
             items(nextGames?.size ?: 0) { index ->
-                val game = nextGames?.get(index)
+                val gameState = gameViewModel.getGame( nextGames?.get(index)!!).observeAsState()
+                val game: Game? = gameState.value
                 val homeTeamId = game?.homeTeamId
                 val awayTeamId = game?.awayTeamId
-                val managerTeamId = team?.abbreviation
+                val managerTeamId = team.abbreviation
 
                 val opponentTeam = if (homeTeamId != managerTeamId) homeTeamId else awayTeamId
                 val isHomeGame = homeTeamId != managerTeamId

@@ -1,7 +1,9 @@
 package com.dam.hoopsdynasty.ui.view.homeOptions
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -51,24 +53,18 @@ import kotlinx.coroutines.delay
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun GameView(mainViewModel: MainViewModel, navController: NavController) {
+   // val application : Application = LocalContext.current.applicationContext as Application
     val context = LocalContext.current
     val managerViewModel = mainViewModel.managerViewModel
     val gameViewModel = mainViewModel.gameViewModel
     val teamViewModel = mainViewModel.teamViewModel
+    //val gsViewModel = GamesSimulationViewModel(application)
     val gsViewModel = mainViewModel.gamesSimulationViewModel
-
     val theManager by managerViewModel.getManager().observeAsState()
     val teamAbr = theManager?.team?.abbreviation
 
     val teamLiveData = teamViewModel.getTeam(teamAbr).observeAsState()
     val managerTeam: Team? = teamLiveData.value
-
-    if(theManager != null) {
-        gsViewModel.setManager(theManager!!)
-    }
-    //get the next game to play
-    val nextGames = theManager?.team?.games
-    var nextGame = nextGames?.get(0)
 
 
     val gameIsOver by gsViewModel.gameIsOver.collectAsState()
@@ -85,49 +81,68 @@ fun GameView(mainViewModel: MainViewModel, navController: NavController) {
 //        }
 //    }
 
+
     var gameSimulation: GameSimulation? = null
-    nextGame?.let { game ->
-        gameSimulation = GameSimulation(mainViewModel, game, gsViewModel)
-        //gsViewModel.setGameSimulation(mainViewModel, game, gameSimulation)
+
+    if (theManager != null) {
+        gsViewModel.setManager(theManager!!)
 
 
-        val homeTeamLiveData = teamViewModel.getTeam(game.homeTeamId)
-        val homeTeam = homeTeamLiveData.observeAsState().value
+        val nextGamesId = theManager?.team?.games?.get(0)
+        val nextGameState = gameViewModel.getGame(nextGamesId!!).observeAsState()
+        val nextGame = nextGameState.value
+        //get the next game to play
+        Log.d("GameView", "nextGame: $nextGame")
+        nextGame?.let { game ->
+            gameSimulation = GameSimulation(mainViewModel, game, gsViewModel)
+            //gsViewModel.setGameSimulation(mainViewModel, game, gameSimulation)
 
-        val awayTeamLiveData = teamViewModel.getTeam(game.awayTeamId)
-        val awayTeam = awayTeamLiveData.observeAsState().value
 
-        if (homeTeam != null && awayTeam != null) {
-            gsViewModel.setHomeTeam(homeTeam)
-            gsViewModel.setAwayTeam(awayTeam)
-        }
+            val homeTeamLiveData = teamViewModel.getTeam(game.homeTeamId)
+            val homeTeam = homeTeamLiveData.observeAsState().value
 
-    }
+            val awayTeamLiveData = teamViewModel.getTeam(game.awayTeamId)
+            val awayTeam = awayTeamLiveData.observeAsState().value
 
-    val homeTeam = gsViewModel.homeTeam.value
-    val awayTeam = gsViewModel.awayTeam.value
-
-    if (gameSimulation != null) {
-        gameSimulation?.navigateToOtherComposable = {
-            // Navigate to another composable here
-            // Example: use navigation library or set a flag to switch to another screen
-        }
-    }
-
-    Column() {
-
-        if (gameIsOver && winnerTeam != null) {
-            BuzzerView(
-                homeTeam!!, awayTeam!!, homeScore, awayScore, winnerTeam!!,
-                nextGame!!, teamViewModel, managerViewModel,
-                navController,
-            )
-        } else {
             if (homeTeam != null && awayTeam != null) {
-                GameRunning(homeTeam, awayTeam, homeScore, awayScore, mainViewModel, gameSimulation, gsViewModel, context)
+                gsViewModel.setHomeTeam(homeTeam)
+                gsViewModel.setAwayTeam(awayTeam)
             }
+
         }
 
+
+        val homeTeam = gsViewModel.homeTeam.value
+        val awayTeam = gsViewModel.awayTeam.value
+
+        if (gameSimulation != null) {
+
+        }
+
+        Column() {
+
+            if (gameIsOver && winnerTeam != null) {
+                BuzzerView(
+                    homeTeam!!, awayTeam!!, homeScore, awayScore, winnerTeam!!,
+                    nextGame!!, teamViewModel, managerViewModel, gsViewModel,
+                    navController,
+                )
+            } else {
+                if (homeTeam != null && awayTeam != null && gameSimulation != null) {
+                    GameRunning(
+                        homeTeam,
+                        awayTeam,
+                        homeScore,
+                        awayScore,
+                        mainViewModel,
+                        gameSimulation,
+                        gsViewModel,
+                        context
+                    )
+                }
+            }
+
+        }
     }
 }
 
@@ -242,7 +257,7 @@ fun GameScore(
                     }
                 }
 
-                val fontSize = if(awayScore >= 100 && homeScore >= 100) 36 else 40
+                val fontSize = if (awayScore >= 100 && homeScore >= 100) 36 else 40
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

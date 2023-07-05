@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "games")
 data class Game(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0, // Set a default value of 0 to enable auto-increment
+    @PrimaryKey val id: Int, // Set a default value of 0 to enable auto-increment
     val season: Int,
     val arena: String,
     val homeTeamId: String,

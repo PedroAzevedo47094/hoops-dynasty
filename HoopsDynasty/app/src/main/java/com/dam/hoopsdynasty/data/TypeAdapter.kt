@@ -77,7 +77,7 @@ class TeamAdapter : JsonSerializer<Team>, JsonDeserializer<Team> {
         val players = context?.deserialize<List<Player>>(jsonObject?.get("players"), object : TypeToken<List<Player>>() {}.type)
         val bench = context?.deserialize<List<Player>>(jsonObject?.get("bench"), object : TypeToken<List<Player>>() {}.type)
         val positions = context?.deserialize<Map<String, Player?>>(jsonObject?.get("positions"), object : TypeToken<Map<String, Player?>>() {}.type)
-        val games = context?.deserialize<List<Game>>(jsonObject?.get("games"), object : TypeToken<List<Game>>() {}.type)
+        val games = context?.deserialize<List<Int>>(jsonObject?.get("games"), object : TypeToken<List<Int>>() {}.type)
         val wins = jsonObject?.get("wins")?.asInt ?: 0
         val losses = jsonObject?.get("losses")?.asInt ?: 0
 

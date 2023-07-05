@@ -20,7 +20,7 @@ import com.dam.hoopsdynasty.data.model.Team
 
 @Database(
     entities = [Team::class, Player::class, Manager::class, Season::class, Game::class],
-    version = 9,
+    version = 13,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

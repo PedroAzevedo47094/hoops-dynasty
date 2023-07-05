@@ -1,10 +1,6 @@
 package com.dam.hoopsdynasty.ui.simulation
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
@@ -39,9 +35,9 @@ class GameSimulation(
     private var awayTeam: Team? = null
 
 
-    private var homeTeamScore by mutableStateOf(0)
+    private var homeTeamScore = 0
 
-    private var awayTeamScore by mutableStateOf(0)
+    private var awayTeamScore = 0
 
 
     private var homeTeamWin = false
@@ -51,12 +47,12 @@ class GameSimulation(
     private var defendingTeam: Team? = null
 
     private var plays = 0
-    private var maxPlays = 100
+    private var maxPlays = 30
     private var qNumber = 1
 
     private var time = "48:00"
 
-    lateinit var navigateToOtherComposable: () -> Unit
+
 
 
     fun setHomeTeam(team: Team) {
@@ -80,7 +76,7 @@ class GameSimulation(
         val minutes = parts[0].toInt()
         val seconds = parts[1].toInt()
 
-        val totalSeconds = minutes * 60 + seconds - 7
+        val totalSeconds = minutes * 60 + seconds - 24
         val newMinutes = totalSeconds / 60
         val newSeconds = totalSeconds % 60
 
@@ -168,7 +164,7 @@ class GameSimulation(
 
     private fun playResult(attackingTeam: Team?, defendingTeam: Team?): Int {
         val value = (calculateDefensePts(defendingTeam) - calculateAttackPts(attackingTeam)).toInt()
-        val valueRand = Random.nextInt(-1, 3)
+        val valueRand = Random.nextInt(-3, 1)
         val valueFinal = (value * valueRand)
 
 
@@ -282,8 +278,14 @@ class GameSimulation(
         currentGame.winner = if (homeTeamWin) homeTeam?.abbreviation else awayTeam?.abbreviation
         currentGame.loser = if (homeTeamWin) awayTeam?.abbreviation else homeTeam?.abbreviation
 
-        val gameId = currentGame.id
+        val gameId = currentGame
+        Log.d("GameSimulation", "GameId: $gameId")
+
+
+
         gameViewModel.updateGame(currentGame)
+
+
 
         if (homeTeamWin) {
             homeTeam?.wins = homeTeam?.wins!! + 1
@@ -297,9 +299,6 @@ class GameSimulation(
         teamViewModel.updateTeam(homeTeam!!)
         teamViewModel.updateTeam(awayTeam!!)
 
-        Log.d("GameSimulation", "HomeTeam############11: {${homeTeam?.games}")
-
-        Log.d("GameSimulation", "AwayTeam#########222: ${awayTeam?.games}")
 
         if (homeTeam == theManager?.team)
             theManager?.team = homeTeam else theManager?.team = awayTeam
@@ -307,7 +306,7 @@ class GameSimulation(
 
 
         if (theManager != null) {
-            Log.d("GameSimulation", "TheManager: $theManager")
+
             managerViewModel.updateManager(theManager)
         }
 

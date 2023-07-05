@@ -56,7 +56,7 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
     val teamLiveData = teamViewModel.getTeam(teamAbr).observeAsState()
     val team: Team? = teamLiveData.value
 
-
+    val gameViewModel = mainViewModel.gameViewModel
 
     Column {
 
@@ -199,20 +199,14 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
         }
 
         Spacer(modifier = Modifier.padding(space))
-        Log.d("HomeView", "Manager###11111: ${theManager?.team?.games}")
+
         if (theManager != null) {
             val teamManager = theManager?.team
-            Log.d("HomeView", "Manager###22222: ${teamManager?.games}")
+
             if (teamManager != null) {
-                val nextGames = teamManager?.games
-
-                Log.d("HomeView", "NextGames: ${theManager?.team?.games}")
-                var nextGame = nextGames?.get(0)
-
-                nextGames?.forEach { game ->
-
-                    Log.d("HomeView", "GameId: ${game.homeTeamId}")
-                }
+                val nextGameId = teamManager.games?.get(0)
+                val nextGameState = gameViewModel.getGame(nextGameId!!).observeAsState()
+                val nextGame: Game? = nextGameState.value
 
                 /* nextGames?.forEach { game ->
                          if (game.winner == null) {
@@ -221,7 +215,6 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
                          }
                      }*/
 
-                Log.d("HomeView", "TeamId: ${theManager?.team}")
                 Row() {
                     Box(
                         modifier = Modifier
@@ -239,12 +232,12 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
                                     shape = RoundedCornerShape(8.dp)
                                 )
                         ) {
-                            if (team != null) {
+                            if (team != null && nextGame != null) {
                                 NextGame(
                                     mainViewModel = mainViewModel,
                                     navController = navController,
                                     team = team,
-                                    nextGame = nextGame!!,
+                                    nextGame = nextGame,
                                     context = context
                                 )
                             }

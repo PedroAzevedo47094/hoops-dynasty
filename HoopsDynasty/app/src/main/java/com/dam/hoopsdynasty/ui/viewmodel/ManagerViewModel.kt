@@ -108,10 +108,10 @@ class ManagerViewModel(application: Application) : AndroidViewModel(application)
             myRef.child("season").setValue(seasonJson)
         }
 
-        gameViewModel.getAllGames().observe(ProcessLifecycleOwner.get()) { gamesList ->
-            val gamesJson = gson.toJson(gamesList)
-            myRef.child("games").setValue(gamesJson)
-        }
+//        gameViewModel.getAllGames().observe(ProcessLifecycleOwner.get()) { gamesList ->
+//            val gamesJson = gson.toJson(gamesList)
+//            myRef.child("games").setValue(gamesJson)
+//        }
 
         // Step 5: Convert and backup 'games' table
 

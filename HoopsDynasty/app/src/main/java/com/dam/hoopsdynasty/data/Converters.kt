@@ -44,6 +44,18 @@ object Converters {
         return Gson().fromJson(gamesListString, object : TypeToken<List<Game>?>() {}.type)
     }
 
+    @TypeConverter
+    @JvmStatic
+    fun fromIntList(gamesList: List<Int>?): String? {
+        return Gson().toJson(gamesList)
+    }
+
+    @TypeConverter
+    @JvmStatic
+    fun toIntList(gamesListString: String?): List<Int>? {
+        return Gson().fromJson(gamesListString, object : TypeToken<List<Int>?>() {}.type)
+    }
+
     //conver A Team to a String
     @TypeConverter
     @JvmStatic

@@ -362,7 +362,7 @@ object DataPopulator {
     }
 
 
-    private fun generateSchedule(): List<Game> {
+/*    private fun generateSchedule(): List<Game> {
 
         val divisions = listOf(
             atlanticDivision,
@@ -395,9 +395,9 @@ object DataPopulator {
         thegames.addAll(generateGamesBetweenConferences())
 
         return thegames
-    }
+    }*/
 
-    private fun genereteDivisionGames(division: List<Team>): List<Game> {
+   /* private fun genereteDivisionGames(division: List<Team>): List<Game> {
 
 
         val divisionGames = mutableListOf<Game>()
@@ -414,9 +414,9 @@ object DataPopulator {
             }
         }
         return divisionGames
-    }
+    }*/
 
-    private fun generateGamesFromConferenceOutOfDivision(
+  /*  private fun generateGamesFromConferenceOutOfDivision(
         conference: List<Team>,
         divisions: List<List<Team>>,
 
@@ -530,9 +530,9 @@ object DataPopulator {
 
 
         return allGames
-    }
+    }*/
 
-    private fun generateGamesBetweenConferences(): List<Game> {
+   /* private fun generateGamesBetweenConferences(): List<Game> {
 
 
         val allGames = mutableListOf<Game>()
@@ -547,10 +547,11 @@ object DataPopulator {
         }
 
         return allGames
-    }
+    }*/
 
-    private fun createGame(homeTeam: Team, awayTeam: Team): Game {
+    private fun createGame(id : Int, homeTeam: Team, awayTeam: Team): Game {
         return Game(
+            id = id,
             season = 1,
             arena = homeTeam.arena,
             homeTeamId = homeTeam.abbreviation,
@@ -582,10 +583,10 @@ object DataPopulator {
     private fun addGamesToTeams(teams: List<Team>, games: List<Game>?): List<Team> {
 
         teams.forEach { team ->
-            val teamGames = mutableListOf<Game>()
+            val teamGames = mutableListOf<Int>()
             games?.forEach { game ->
                 if (game.homeTeamId == team.abbreviation || game.awayTeamId == team.abbreviation) {
-                    teamGames.add(game)
+                    teamGames.add(game.id)
                 }
             }
             team.games = teamGames
@@ -596,11 +597,13 @@ object DataPopulator {
 
     private fun generateShortSchedule(teams: List<Team>): List<Game>{
         var shortSchedule = mutableListOf<Game>()
+        var id = 1
         teams.forEach { team ->
             teams.forEach { opponent ->
                 if (team != opponent) {
-                    val game1 = createGame(team, opponent)
+                    val game1 = createGame(id, team, opponent)
                     shortSchedule += game1
+                    id++
                 }
             }
         }
