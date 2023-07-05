@@ -40,6 +40,7 @@ import com.dam.hoopsdynasty.R
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.ui.simulation.GameSimulation
+import com.dam.hoopsdynasty.ui.view.BuzzerView
 import com.dam.hoopsdynasty.ui.view.reusableComposables.PlayerImageWithValue
 import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogo
 import com.dam.hoopsdynasty.ui.viewmodel.GamesSimulationViewModel
@@ -62,18 +63,27 @@ fun GameView(mainViewModel: MainViewModel, navController: NavController) {
     val teamLiveData = teamViewModel.getTeam(teamAbr).observeAsState()
     val managerTeam: Team? = teamLiveData.value
 
+    if(theManager != null) {
+        gsViewModel.setManager(theManager!!)
+    }
     //get the next game to play
-    val nextGames = managerTeam?.games
+    val nextGames = theManager?.team?.games
     var nextGame = nextGames?.get(0)
 
 
+    val gameIsOver by gsViewModel.gameIsOver.collectAsState()
+    val winnerId by gsViewModel.winner.collectAsState()
+    val winnerTeam by gsViewModel.winnerTeam.collectAsState()
 
-    nextGames?.forEach { game ->
-        if (game.winner == null) {
-            nextGame = game
-            return@forEach
-        }
-    }
+    val homeScore by gsViewModel.homeScore.collectAsState()
+    val awayScore by gsViewModel.awayScore.collectAsState()
+
+//    nextGames?.forEach { game ->
+//        if (game.winner == null) {
+//            nextGame = game
+//            return@forEach
+//        }
+//    }
 
     var gameSimulation: GameSimulation? = null
     nextGame?.let { game ->
@@ -97,34 +107,64 @@ fun GameView(mainViewModel: MainViewModel, navController: NavController) {
     val homeTeam = gsViewModel.homeTeam.value
     val awayTeam = gsViewModel.awayTeam.value
 
-
-
+    if (gameSimulation != null) {
+        gameSimulation?.navigateToOtherComposable = {
+            // Navigate to another composable here
+            // Example: use navigation library or set a flag to switch to another screen
+        }
+    }
 
     Column() {
-        Row {
 
-            Box(
-                modifier = Modifier
-                    .padding(2.dp)
-                    .align(Alignment.CenterVertically)
+        if (gameIsOver && winnerTeam != null) {
+            BuzzerView(
+                homeTeam!!, awayTeam!!, homeScore, awayScore, winnerTeam!!,
+                nextGame!!, teamViewModel, managerViewModel,
+                navController,
             )
-            {
-                if (homeTeam != null && awayTeam != null) {
-                    GameScore(
-                        homeTeam, awayTeam, mainViewModel,
-                        gameSimulation!!, gsViewModel, context
-                    )
-                }
+        } else {
+            if (homeTeam != null && awayTeam != null) {
+                GameRunning(homeTeam, awayTeam, homeScore, awayScore, mainViewModel, gameSimulation, gsViewModel, context)
             }
         }
-        Row(modifier = Modifier.fillMaxSize()) {
-            if (homeTeam != null && awayTeam != null) {
-                val homeTeamLineUp = homeTeam.positions
-                val awayTeamLineUp = awayTeam.positions
-                LineUp(homeTeamLineUp, awayTeamLineUp, context, gsViewModel)
-            }
+
+    }
+}
+
+@Composable
+fun GameRunning(
+    homeTeam: Team,
+    awayTeam: Team,
+    homeScore: Int,
+    awayScore: Int,
+    mainViewModel: MainViewModel,
+    gameSimulation: GameSimulation?,
+    gsViewModel: GamesSimulationViewModel,
+    context: Context
+
+) {
+    Row {
+        Box(
+            modifier = Modifier
+                .padding(2.dp)
+                .align(Alignment.CenterVertically)
+        )
+        {
+
+            GameScore(
+                homeTeam, awayTeam, homeScore = homeScore, awayScore = awayScore, mainViewModel,
+                gameSimulation!!, gsViewModel, context
+            )
 
         }
+    }
+    Row(modifier = Modifier.fillMaxSize()) {
+
+        val homeTeamLineUp = homeTeam.positions
+        val awayTeamLineUp = awayTeam.positions
+        LineUp(homeTeamLineUp, awayTeamLineUp, context, gsViewModel)
+
+
     }
 }
 
@@ -133,6 +173,8 @@ fun GameView(mainViewModel: MainViewModel, navController: NavController) {
 fun GameScore(
     homeTeam: Team,
     awayTeam: Team,
+    homeScore: Int,
+    awayScore: Int,
     mainViewModel: MainViewModel,
     gameSimulation: GameSimulation,
     gsViewModel: GamesSimulationViewModel,
@@ -141,8 +183,7 @@ fun GameScore(
 
     gameSimulation.setHomeTeam(homeTeam)
     gameSimulation.setAwayTeam(awayTeam)
-    val homeScore by gsViewModel.homeScore.collectAsState()
-    val awayScore by gsViewModel.awayScore.collectAsState()
+
 
     LaunchedEffect(Unit) {
         delay(2000) // Wait for 2 seconds
@@ -201,6 +242,8 @@ fun GameScore(
                     }
                 }
 
+                val fontSize = if(awayScore >= 100 && homeScore >= 100) 36 else 40
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -208,7 +251,7 @@ fun GameScore(
                     Column {
                         Text(
                             text = awayScore.toString(),
-                            fontSize = 40.sp,
+                            fontSize = fontSize.sp,
                             fontWeight = FontWeight.Light,
                             color = Color.White,
                             textAlign = TextAlign.Center
@@ -217,7 +260,7 @@ fun GameScore(
                     Column {
                         Text(
                             text = "-",
-                            fontSize = 40.sp,
+                            fontSize = fontSize.sp,
                             fontWeight = FontWeight.ExtraLight,
                             color = Color.White,
                             textAlign = TextAlign.Center
@@ -226,7 +269,7 @@ fun GameScore(
                     Column {
                         Text(
                             text = "$homeScore",
-                            fontSize = 40.sp,
+                            fontSize = fontSize.sp,
                             fontWeight = FontWeight.Light,
                             color = Color.White,
                             textAlign = TextAlign.Center
@@ -355,7 +398,8 @@ fun MiddleCourtLine(awayTeamPg: Player?, homeTeamPg: Player?, time: String, cont
         Box(
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth().padding(top = 10.dp)
+                .fillMaxWidth()
+                .padding(top = 10.dp)
 
         ) {
             Column(
@@ -365,7 +409,10 @@ fun MiddleCourtLine(awayTeamPg: Player?, homeTeamPg: Player?, time: String, cont
             ) {
                 Box(
                     modifier = Modifier
-                        .background(Color.White.copy(alpha = 0.19f), shape = RoundedCornerShape(4.dp))
+                        .background(
+                            Color.White.copy(alpha = 0.19f),
+                            shape = RoundedCornerShape(4.dp)
+                        )
                         .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(4.dp))
                 ) {
 
@@ -426,31 +473,12 @@ fun StartersAway(awayTeamLineUp: Map<String, Player?>, context: Context) {
         }
 
     }
-//
-//    Row(
-//        modifier = Modifier.fillMaxWidth(),
-//        horizontalArrangement = Arrangement.Center // Center the player horizontally
-//    ) {
-//        val PG = awayTeamLineUp["PG"]
-//
-//        Box() {
-//            PlayerImageWithValue(player = PG, context = context)
-//        }
-//    }
+
 }
 
 @Composable
 fun StartersHome(homeTeamLineUp: Map<String, Player?>, context: Context) {
-//    Row(
-//        modifier = Modifier.fillMaxWidth(),
-//        horizontalArrangement = Arrangement.Center // Center the player horizontally
-//    ) {
-//        val PG = homeTeamLineUp["PG"]
-//
-//        Box() {
-//            PlayerImageWithValue(player = PG, context = context)
-//        }
-//    }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween // Position players evenly horizontally
@@ -488,35 +516,6 @@ fun StartersHome(homeTeamLineUp: Map<String, Player?>, context: Context) {
     }
 }
 
-
-/*  Column() {
-
-      Text(
-          text = "Away",
-          fontSize = 14.sp,
-          fontWeight = FontWeight.Light,
-          color = Color.White,
-          textAlign = TextAlign.Center
-      )
-      StartersAway(awayTeamLineUp = awayTeamLineUp, context = context)
-  }
-
-  Spacer(modifier = Modifier.height(4.dp))
-  Column {
-      StartersHome(homeTeamLineUp = homeTeamLineUp, context = context)
-
-      Text(
-          text = "Home",
-          fontSize = 14.sp,
-          fontWeight = FontWeight.Light,
-          color = Color.White,
-          textAlign = TextAlign.Center,
-          modifier = Modifier.padding(top = 8.dp)
-      )
-  }
-}
-}
-*/
 
 
 

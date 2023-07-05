@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -71,9 +73,9 @@ fun CalendarView(mainViewModel: MainViewModel, navController: NavController) {
             ) {
                 Text(
                     text = "Calendar",
-                    //modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-                    color = Color.White,
-                    fontSize = 20.sp
+                    color = colorScheme.primary,
+                    fontSize = 23.sp,
+                    fontWeight = FontWeight.Light
                 )
             }
 
@@ -81,7 +83,7 @@ fun CalendarView(mainViewModel: MainViewModel, navController: NavController) {
                 modifier = Modifier
                     .padding(vertical = 8.dp, horizontal = 12.dp)
                     .align(Alignment.CenterVertically)
-                    .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
+                    .border(0.7.dp, colorScheme.primary, shape = RoundedCornerShape(8.dp))
             ) {
                 TextButton(
                     onClick = {
@@ -92,7 +94,7 @@ fun CalendarView(mainViewModel: MainViewModel, navController: NavController) {
                     // Adjust the padding values for the TextButton
                     colors = ButtonDefaults.textButtonColors(
                         // backgroundColor = Color.Transparent, // Set the background color to transparent
-                        contentColor = Color.White, // Set the text color
+                        contentColor = MaterialTheme.colorScheme.primary, // Set the text color
                     ),
                     shape = RoundedCornerShape(8.dp), // Apply rounded corner shape
                     contentPadding = PaddingValues(5.dp) // Remove padding from the button
@@ -100,7 +102,8 @@ fun CalendarView(mainViewModel: MainViewModel, navController: NavController) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = "Home",
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Light,
                         )
 
                     }
@@ -137,7 +140,7 @@ fun GameBox(opponetTeam: String, context: Context, at: Boolean) {
     Box(
         modifier = Modifier
             .padding(2.dp)
-            .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
+            .border(0.7.dp, Color.White, shape = RoundedCornerShape(8.dp))
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically

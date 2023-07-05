@@ -1,6 +1,7 @@
 package com.dam.hoopsdynasty.ui.view.Register_Login
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.TextField
@@ -21,8 +23,8 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,8 +35,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +47,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.dam.hoopsdynasty.R
 import com.dam.hoopsdynasty.ui.Screen
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
@@ -51,6 +56,21 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember {
         mutableStateOf("")
+    }
+
+
+    Column() {
+        Box(
+            modifier = Modifier
+                .size(100.dp)
+
+        ) {
+            Image(
+                painter = painterResource(R.drawable.hoopsdynasty),
+                contentDescription = "logo",
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 
     Column() {
@@ -63,29 +83,35 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
             Box(
                 modifier = Modifier
                     .padding(8.dp)
-                    .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)),
+                    .border((0.7.dp), colorScheme.primary, shape = RoundedCornerShape(8.dp)),
             ) {
                 Text(
                     text = "Login Manager",
                     modifier = Modifier
                         .padding(horizontal = 40.dp, vertical = 10.dp),
-                    color = Color.White,
-                    fontSize = 23.sp
+                    color = colorScheme.primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Light
                 )
             }
         }
+
         Spacer(modifier = Modifier.height(18.dp))
         Column() {
             Text(
-                text = "Email",
-                color = Color.White,
-                fontSize = 20.sp,
+                text = "Email:",
+                color = colorScheme.primary,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Light
             )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White.copy(alpha = 0.19f), shape = RoundedCornerShape(4.dp))
-                    .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(4.dp))
+                    .border(
+                        BorderStroke((0.7.dp), colorScheme.primary),
+                        shape = RoundedCornerShape(4.dp)
+                    )
                     .padding(horizontal = 4.dp)
                     .height(55.dp) // Adjust the height as needed
             ) {
@@ -109,15 +135,19 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
         Spacer(modifier = Modifier.height(18.dp))
         Column() {
             Text(
-                text = "Password",
-                color = Color.White,
-                fontSize = 20.sp,
+                text = "Password:",
+                color = colorScheme.primary,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Light
             )
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White.copy(alpha = 0.19f), shape = RoundedCornerShape(4.dp))
-                    .border(BorderStroke(1.dp, Color.Black), shape = RoundedCornerShape(4.dp))
+                    .border(
+                        BorderStroke((0.7.dp), colorScheme.primary),
+                        shape = RoundedCornerShape(4.dp)
+                    )
                     .padding(horizontal = 4.dp)
                     .height(55.dp) // Adjust the height as needed
             ) {
@@ -157,7 +187,7 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
             Box(
                 modifier = Modifier
                     .padding(4.dp) // Adjust the padding values for the Box
-                    .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
+                    .border((0.7.dp), colorScheme.primary, shape = RoundedCornerShape(8.dp))
             ) {
                 TextButton(
                     onClick = {
@@ -171,10 +201,10 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
                     modifier = Modifier.padding(
                         horizontal = 30.dp,
                         vertical = 0.5.dp
-                    ), // Adjust the padding values for the TextButton
+                    ),
                     colors = ButtonDefaults.textButtonColors(
-                        // backgroundColor = Color.Transparent, // Set the background color to transparent
-                        contentColor = Color.White, // Set the text color
+
+                        contentColor = colorScheme.primary, // Set the text color
                     ),
                     shape = RoundedCornerShape(8.dp), // Apply rounded corner shape
                     contentPadding = PaddingValues(0.dp) // Remove padding from the button
@@ -182,7 +212,8 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = "Next",
-                            fontSize = 20.sp
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Light
                         )
                         Icon(
                             imageVector = Icons.Filled.ArrowForward,
@@ -204,7 +235,7 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
                         append("Don't have an account? Register")
                     }
                 },
-                color = Color.White,
+                color = colorScheme.primary,
                 fontSize = 16.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -214,10 +245,6 @@ fun ManagerLogin(viewModel: MainViewModel, navController: NavController) {
                     }
             )
         }
-
-
-
-
 
 
     }

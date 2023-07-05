@@ -13,3 +13,5 @@ val Pink40 = Color(0xFF7D5260)
 val nba_blue = Color(0xFF1D428A)
 val nba_red = Color(0xff840a20)
 val nba_white = Color(0x4dd9d9d9)
+
+val gold = Color(0xffF8D39D)

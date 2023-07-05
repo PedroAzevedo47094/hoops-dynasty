@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,16 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
 import com.dam.hoopsdynasty.ui.view.reusableComposables.PlayerImage
-import com.dam.hoopsdynasty.ui.view.reusableComposables.PlayerRating
 import com.dam.hoopsdynasty.ui.view.reusableComposables.PlayerRating1
-import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogo
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 import java.text.NumberFormat
 import java.util.Locale
@@ -73,7 +71,7 @@ fun TradeView(mainViewModel: MainViewModel, navController: NavController) {
                 Text(
                     text = "50,000$",
 
-                    color = Color.White,
+                    color = colorScheme.primary,
                     fontSize = 20.sp
                 )
             }
@@ -86,16 +84,16 @@ fun TradeView(mainViewModel: MainViewModel, navController: NavController) {
             ) {
                 Text(
                     text = "Marketplace",
-
-                    color = Color.White,
-                    fontSize = 20.sp
+                    color = colorScheme.primary,
+                    fontSize = 23.sp,
+                    fontWeight = FontWeight.Light
                 )
             }
             Box(
                 modifier = Modifier
                     .padding(vertical = 8.dp, horizontal = 12.dp)
                     .align(Alignment.CenterVertically)
-                    .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
+                    .border(0.7.dp, colorScheme.primary, shape = RoundedCornerShape(8.dp))
             ) {
                 TextButton(
                     onClick = {
@@ -106,7 +104,7 @@ fun TradeView(mainViewModel: MainViewModel, navController: NavController) {
                     // Adjust the padding values for the TextButton
                     colors = ButtonDefaults.textButtonColors(
                         // backgroundColor = Color.Transparent, // Set the background color to transparent
-                        contentColor = Color.White, // Set the text color
+                        contentColor = MaterialTheme.colorScheme.primary, // Set the text color
                     ),
                     shape = RoundedCornerShape(8.dp), // Apply rounded corner shape
                     contentPadding = PaddingValues(5.dp) // Remove padding from the button
@@ -114,7 +112,8 @@ fun TradeView(mainViewModel: MainViewModel, navController: NavController) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = "Home",
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Light,
                         )
 
                     }
@@ -145,13 +144,14 @@ fun PlayerBox(player: Player, context: Context) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(8.dp)
-            .wrapContentHeight()
             .fillMaxWidth()
-            .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp)),
+            .border(0.7.dp, Color.White, shape = RoundedCornerShape(8.dp)),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Box(
-            modifier = Modifier.padding(8.dp)
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(0.75f)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -160,7 +160,7 @@ fun PlayerBox(player: Player, context: Context) {
                 Column(modifier = Modifier.padding(8.dp)) {
                     Row {
                         var font = 16.sp
-                        if(player.lastName.length > 12){
+                        if (player.lastName.length >= 11) {
                             font = 12.sp
                         }
 
@@ -177,10 +177,13 @@ fun PlayerBox(player: Player, context: Context) {
                 }
             }
         }
-        Box(
-            modifier = Modifier.padding(8.dp),
 
-        ) {
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .weight(0.25f),
+
+            ) {
             Column {
                 Row {
                     player.rating.roundToInt()
@@ -197,7 +200,8 @@ fun PlayerBox(player: Player, context: Context) {
                         in 90..99 -> Random.nextInt(60000, 69999)
                         else -> Random.nextInt(70000, 79999)
                     }
-                    val formattedCost = NumberFormat.getNumberInstance(Locale.getDefault()).format(cost)
+                    val formattedCost =
+                        NumberFormat.getNumberInstance(Locale.getDefault()).format(cost)
 
                     Text(text = "$formattedCost$", fontSize = 14.sp, color = Color.White)
                 }

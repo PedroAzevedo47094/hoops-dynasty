@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,9 +24,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,11 +38,11 @@ import androidx.navigation.NavController
 import com.dam.hoopsdynasty.R
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Team
-import com.dam.hoopsdynasty.ui.Screen
 import com.dam.hoopsdynasty.ui.view.reusableComposables.PlayerImage
 import com.dam.hoopsdynasty.ui.view.reusableComposables.TeamLogoABV
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
 
@@ -69,7 +74,7 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(100.dp)
+                            .size(95.dp)
 
                     ) {
                         if (team != null) {
@@ -79,29 +84,30 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
 
                     Box(
                         modifier = Modifier
-                            .padding(2.dp)
+                            .padding(top = 2.dp)
                             .align(Alignment.CenterVertically)
-                    ) {
-                        Column {
-                            Text(
-                                text = "Hoops",
-                                color = Color.White,
-                                fontSize = 25.sp
-                            )
 
-                            Text(
-                                text = "Dynasty",
-                                color = Color.White,
-                                fontSize = 25.sp
-                            )
-                        }
+                    ) {
+                        val gradientColors = listOf(Color(0xff64EFFC), Color(0xffD39A63))
+                        Text(
+                            text = "Hoops Dynasty",
+                            style = TextStyle(
+                                brush = Brush.linearGradient(
+                                    colors = gradientColors
+                                )
+                            ),
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Light
+                        )
+
                     }
 
                     Box(
                         modifier = Modifier
                             .padding(2.dp)
+                            .padding(start = 10.dp)
                             .align(Alignment.CenterVertically)
-                            .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
+                            .border((0.7.dp), colorScheme.primary, shape = RoundedCornerShape(8.dp))
                     ) {
                         Column(
                             modifier = Modifier.padding(2.dp),
@@ -142,7 +148,7 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
                     modifier = Modifier
                         .padding(2.dp)
                         .fillMaxWidth()
-                        .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
+                        .border(0.7.dp, colorScheme.primary, shape = RoundedCornerShape(8.dp))
                 ) {
                     if (team != null) {
                         TeamManagment(team, context)
@@ -193,58 +199,72 @@ fun HomeView(mainViewModel: MainViewModel, navController: NavController) {
         }
 
         Spacer(modifier = Modifier.padding(space))
+        Log.d("HomeView", "Manager###11111: ${theManager?.team?.games}")
+        if (theManager != null) {
+            val teamManager = theManager?.team
+            Log.d("HomeView", "Manager###22222: ${teamManager?.games}")
+            if (teamManager != null) {
+                val nextGames = teamManager?.games
 
-        val nextGames = team?.games
-        var nextGame = nextGames?.get(0)
+                Log.d("HomeView", "NextGames: ${theManager?.team?.games}")
+                var nextGame = nextGames?.get(0)
 
-        nextGames?.forEach { game ->
-            if (game.winner == null) {
-                nextGame = game
-                return@forEach
-            }
-        }
+                nextGames?.forEach { game ->
 
-        Log.d("HomeView", "GameId: $nextGame.id")
-        Row() {
-            Box(
-                modifier = Modifier
-                    .padding(2.dp)
-                    .align(Alignment.CenterVertically)
-            ) {
-                TextButton(
-                    onClick = { navController.navigate("game") },
-                    modifier = Modifier
-                        .padding(2.dp)
-                        .fillMaxWidth()
-                        .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
-                ) {
-                    if (team != null) {
-                        NextGame(
-                            mainViewModel = mainViewModel,
-                            navController = navController,
-                            team = team,
-                            nextGame = nextGame!!,
-                            context = context
-                        )
+                    Log.d("HomeView", "GameId: ${game.homeTeamId}")
+                }
+
+                /* nextGames?.forEach { game ->
+                         if (game.winner == null) {
+                             nextGame = game
+                             return@forEach
+                         }
+                     }*/
+
+                Log.d("HomeView", "TeamId: ${theManager?.team}")
+                Row() {
+                    Box(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .align(Alignment.CenterVertically)
+                    ) {
+                        TextButton(
+                            onClick = { navController.navigate("game") },
+                            modifier = Modifier
+                                .padding(2.dp)
+                                .fillMaxWidth()
+                                .border(
+                                    0.7.dp,
+                                    colorScheme.primary,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                        ) {
+                            if (team != null) {
+                                NextGame(
+                                    mainViewModel = mainViewModel,
+                                    navController = navController,
+                                    team = team,
+                                    nextGame = nextGame!!,
+                                    context = context
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
 }
+
 
 @Composable
 fun NextGame(
     mainViewModel: MainViewModel,
     navController: NavController,
     team: Team,
-    nextGame : Game,
+    nextGame: Game,
     context: Context
 ) {
-
-
-
 
 
     val homeTeam = nextGame?.homeTeamId
@@ -257,7 +277,8 @@ fun NextGame(
             modifier = Modifier
                 .fillMaxWidth(.95f)
                 .padding(2.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
@@ -269,7 +290,7 @@ fun NextGame(
                 }
             }
 
-            Text(text = "VS", color = Color.White, fontSize = 25.sp)
+            Text(text = "VS", color = Color.White, fontSize = 25.sp, fontWeight = FontWeight.Light)
 
             Box(
                 modifier = Modifier
@@ -315,7 +336,8 @@ fun TeamManagment(team: Team, context: Context) {
                     modifier = Modifier.padding(4.dp),
                     textAlign = TextAlign.Center,
                     color = Color.White,
-                    fontSize = 25.sp
+                    fontSize = 26.sp,
+                    fontWeight = FontWeight.Light
                 )
             }
 
@@ -343,7 +365,7 @@ fun Calendar(navController: NavController) {
         onClick = { navController.navigate("calendar") },
         modifier = Modifier
             .padding(2.dp)
-            .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
+            .border(0.7.dp, colorScheme.primary, shape = RoundedCornerShape(8.dp))
     ) {
         Box(
             modifier = Modifier
@@ -368,7 +390,7 @@ fun Standings(navController: NavController) {
         onClick = { navController.navigate("standings") },
         modifier = Modifier
             .padding(2.dp)
-            .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
+            .border((0.7.dp), colorScheme.primary, shape = RoundedCornerShape(8.dp))
     ) {
         Box(
             modifier = Modifier
@@ -390,7 +412,7 @@ fun Trade(navController: NavController) {
         onClick = { navController.navigate("trade") },
         modifier = Modifier
             .padding(2.dp)
-            .border(1.dp, Color.White, shape = RoundedCornerShape(8.dp))
+            .border(0.7.dp, colorScheme.primary, shape = RoundedCornerShape(8.dp))
     ) {
         Box(
             modifier = Modifier
@@ -398,8 +420,9 @@ fun Trade(navController: NavController) {
                 .aspectRatio(1f) // Maintain aspect ratio of the image
         ) {
             Image(
-                painter = painterResource(id = R.drawable.trade),
-                contentDescription = "Trade"
+                painter = painterResource(id = R.drawable.marketplace),
+                contentDescription = "Trade",
+                modifier = Modifier.fillMaxSize()
             )
         }
     }

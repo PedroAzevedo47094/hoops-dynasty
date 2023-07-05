@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.dam.hoopsdynasty.ui.view.BuzzerView
 import com.dam.hoopsdynasty.ui.view.HomeView
 import com.dam.hoopsdynasty.ui.view.Register_Login.ManagerInfo
 import com.dam.hoopsdynasty.ui.view.Register_Login.SelectTeam
@@ -70,6 +71,12 @@ fun Navigation() {
             CalendarView(mainViewModel = viewModel, navController = navController)
         }
 
+      /*  composable(route = Screen.BuzzerScreen.route){
+            BuzzerView(
+                mainViewModel = viewModel,
+                navController = navController,
+                )
+        }*/
 
 
         composable(route = Screen.GameScreen.route){

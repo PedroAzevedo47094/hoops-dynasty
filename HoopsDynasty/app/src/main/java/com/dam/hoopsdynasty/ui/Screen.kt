@@ -16,6 +16,8 @@ sealed class Screen(val route: String){
 
     object GameScreen : Screen("game")
 
+    object BuzzerScreen : Screen("buzzer")
+
     fun withArgs(vararg args: String): String {
         return buildString {
             append(route)

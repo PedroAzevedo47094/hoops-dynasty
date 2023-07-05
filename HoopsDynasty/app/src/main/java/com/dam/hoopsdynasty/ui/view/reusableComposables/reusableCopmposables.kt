@@ -66,7 +66,17 @@ fun TeamLogoABV(abr: String?, context: Context) {
 @Composable
 fun PlayerImage(player: Player?, context: Context) {
 
-    //take the .png out of the player image name
+    val Rating = player?.rating?.toInt()
+
+    val color = when (Rating) {
+        in 0..49 -> Color(0xFFB5CADD)
+        in 50..59 -> Color(0xFFB5CADD)
+        in 60..69 -> Color(0xFFB5CADD)
+        in 70..79 -> Color(0xFFAEA80B)
+        in 80..89 -> Color(0xFF01D216)
+        in 90..99 -> Color(0xFFF20DE9)
+        else -> Color(0xFF00CBBF)
+    }
 
 
     val image = player?.image?.removeSuffix(".png")
@@ -81,7 +91,7 @@ fun PlayerImage(player: Player?, context: Context) {
         modifier = Modifier
             .size(70.dp)
             .clip(CircleShape)
-            .border(1.dp, Color.Black, CircleShape)
+            .border(1.dp, color, CircleShape)
             .aspectRatio(1f) // Maintain aspect ratio of the image
     ) {
         Image(
@@ -97,6 +107,10 @@ fun PlayerImage(player: Player?, context: Context) {
 
 @Composable
 fun PlayerImageWithValue(player: Player?, context: Context) {
+
+
+
+
     val playerPosition = player?.position1
 
     //get the first letter of the position

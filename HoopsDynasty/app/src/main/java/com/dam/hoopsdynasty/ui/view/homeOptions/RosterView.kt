@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -112,8 +114,9 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                     Text(
                         text = "Roster",
                         //modifier = Modifier.padding(horizontal = 20.dp, vertical = 10.dp),
-                        color = Color.White,
-                        fontSize = 20.sp
+                        color = colorScheme.primary,
+                        fontSize = 23.sp,
+                        fontWeight = FontWeight.Light
                     )
                 }
 
@@ -121,7 +124,7 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                     modifier = Modifier
                         .padding(vertical = 8.dp, horizontal = 12.dp)
                         .align(Alignment.CenterVertically)
-                        .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
+                        .border(0.7.dp, colorScheme.primary, shape = RoundedCornerShape(8.dp))
                 ) {
                     TextButton(
                         onClick = {
@@ -132,7 +135,7 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                         // Adjust the padding values for the TextButton
                         colors = ButtonDefaults.textButtonColors(
                             // backgroundColor = Color.Transparent, // Set the background color to transparent
-                            contentColor = Color.White, // Set the text color
+                            contentColor = colorScheme.primary, // Set the text color
                         ),
                         shape = RoundedCornerShape(8.dp), // Apply rounded corner shape
                         contentPadding = PaddingValues(5.dp) // Remove padding from the button
@@ -140,7 +143,8 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 text = "Home",
-                                fontSize = 18.sp
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Light,
                             )
 
                         }
@@ -219,7 +223,7 @@ fun RosterView(mainViewModel: MainViewModel, navController: NavController) {
                     )
                     .fillMaxWidth(0.9f)
                     .heightIn(min = desiredHeight2, desiredHeight2)
-                    .border(1.dp, Color.Black, shape = RoundedCornerShape(8.dp))
+                    .border(1.dp, colorScheme.primary, shape = RoundedCornerShape(8.dp))
                     .align(Alignment.CenterHorizontally)
 
             ) {

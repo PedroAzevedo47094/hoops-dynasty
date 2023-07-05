@@ -2,9 +2,9 @@ package com.dam.hoopsdynasty.ui.simulation
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
 import com.dam.hoopsdynasty.data.model.Game
 import com.dam.hoopsdynasty.data.model.Player
 import com.dam.hoopsdynasty.data.model.Team
@@ -20,17 +20,18 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.random.Random
 
-class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulationViewModel: GamesSimulationViewModel) {
+class GameSimulation(
+    mainViewModel: MainViewModel,
+    game: Game,
+    theGamesSimulationViewModel: GamesSimulationViewModel
+) {
     val managerViewModel = mainViewModel.managerViewModel
     val teamViewModel = mainViewModel.teamViewModel
     private val gameViewModel = mainViewModel.gameViewModel
     private var gamesSimulationViewModel: GamesSimulationViewModel = theGamesSimulationViewModel
 
 
-
-
-    private val theManagerLiveData = managerViewModel.getManager()
-    private val theManager = theManagerLiveData.value
+    private val theManager = gamesSimulationViewModel.getManager()
 
     private val currentGame = game
 
@@ -39,10 +40,8 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
 
 
     private var homeTeamScore by mutableStateOf(0)
-        private set
-    private var awayTeamScore by mutableStateOf(0)
-        private set
 
+    private var awayTeamScore by mutableStateOf(0)
 
 
     private var homeTeamWin = false
@@ -52,13 +51,15 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
     private var defendingTeam: Team? = null
 
     private var plays = 0
-    private var maxPlays = 30
+    private var maxPlays = 100
     private var qNumber = 1
 
     private var time = "48:00"
 
+    lateinit var navigateToOtherComposable: () -> Unit
 
-    fun setHomeTeam(team:Team) {
+
+    fun setHomeTeam(team: Team) {
         homeTeam = team
         attackingTeam = homeTeam
     }
@@ -68,25 +69,23 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
         defendingTeam = awayTeam
     }
 
-    fun updateTime(newTime: String) {
+    private fun updateTime(newTime: String) {
         time = newTime
         gamesSimulationViewModel.setTime(time)
     }
 
 
-
-    fun subtractSecondsFromTime(timeString: String, secondsToSubtract: Int): String {
+    private fun subtractSecondsFromTime(timeString: String): String {
         val parts = timeString.split(":")
         val minutes = parts[0].toInt()
         val seconds = parts[1].toInt()
 
-        val totalSeconds = minutes * 60 + seconds - secondsToSubtract
+        val totalSeconds = minutes * 60 + seconds - 7
         val newMinutes = totalSeconds / 60
         val newSeconds = totalSeconds % 60
 
         return String.format("%02d:%02d", newMinutes, newSeconds)
     }
-
 
 
     fun startGame() {
@@ -112,7 +111,7 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
 
 
     private suspend fun runGameSimulation() = withContext(Dispatchers.Default) {
-        while (qNumber < 4) {
+        while (qNumber <= 4) {
             playQuarter()
         }
 
@@ -139,11 +138,12 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
     }
 
     private fun playQuarter() = runBlocking {
-        while (plays < maxPlays) {
+        Log.d("GameSimulation", "PlayQuarter: $qNumber")
+        while (plays <= maxPlays) {
 
             play()
-
-            delay(1500L)
+            delay(100L)
+            //delay(1500L)
         }
         qNumber++
         plays = 0
@@ -154,7 +154,7 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
         if (attackingTeam == homeTeam) homeTeamScore += scoreIncrement else awayTeamScore += scoreIncrement
 
         gamesSimulationViewModel.updateScores(homeTeamScore, awayTeamScore)
-        val newTime = subtractSecondsFromTime(time, 24)
+        val newTime = subtractSecondsFromTime(time)
         updateTime(newTime)
 
 
@@ -168,7 +168,7 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
 
     private fun playResult(attackingTeam: Team?, defendingTeam: Team?): Int {
         val value = (calculateDefensePts(defendingTeam) - calculateAttackPts(attackingTeam)).toInt()
-        val valueRand = Random.nextInt(-1, 1)
+        val valueRand = Random.nextInt(-1, 3)
         val valueFinal = (value * valueRand)
 
 
@@ -273,12 +273,16 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
 
 
     private fun saveGame() {
-        homeTeamScore = homeTeamScore
-        awayTeamScore = awayTeamScore
         currentGame.homeScore = homeTeamScore
         currentGame.awayScore = awayTeamScore
+        val winnerTeam = if (homeTeamWin) {
+            homeTeam
+        } else awayTeam
+
         currentGame.winner = if (homeTeamWin) homeTeam?.abbreviation else awayTeam?.abbreviation
         currentGame.loser = if (homeTeamWin) awayTeam?.abbreviation else homeTeam?.abbreviation
+
+        val gameId = currentGame.id
         gameViewModel.updateGame(currentGame)
 
         if (homeTeamWin) {
@@ -289,13 +293,33 @@ class GameSimulation(mainViewModel: MainViewModel, game: Game, theGamesSimulatio
             awayTeam?.wins = awayTeam?.wins!! + 1
         }
 
+
         teamViewModel.updateTeam(homeTeam!!)
         teamViewModel.updateTeam(awayTeam!!)
 
-        if (homeTeam == theManager?.team) theManager?.team = homeTeam else theManager?.team =
-            awayTeam
+        Log.d("GameSimulation", "HomeTeam############11: {${homeTeam?.games}")
+
+        Log.d("GameSimulation", "AwayTeam#########222: ${awayTeam?.games}")
+
+        if (homeTeam == theManager?.team)
+            theManager?.team = homeTeam else theManager?.team = awayTeam
+
+
+
         if (theManager != null) {
+            Log.d("GameSimulation", "TheManager: $theManager")
             managerViewModel.updateManager(theManager)
+        }
+
+
+        if (winnerTeam != null) {
+            gamesSimulationViewModel.setGameIsOver(
+                true,
+                winner = currentGame.winner,
+                winnerTeam = winnerTeam,
+            )
+
+
         }
 
     }

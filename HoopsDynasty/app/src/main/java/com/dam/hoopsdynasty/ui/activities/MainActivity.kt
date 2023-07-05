@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import com.dam.hoopsdynasty.ui.Navigation
 import com.dam.hoopsdynasty.ui.theme.HoopsDynastyTheme
 import com.dam.hoopsdynasty.ui.view.Background
+import com.dam.hoopsdynasty.ui.view.GradientBackground
 import com.dam.hoopsdynasty.ui.view.HomeView
 import com.dam.hoopsdynasty.ui.viewmodel.MainViewModel
 import com.google.firebase.FirebaseApp
@@ -47,7 +48,7 @@ fun HoopsDynastyApp(viewModel: MainViewModel) {
     HoopsDynastyTheme {
 
         MaterialTheme {
-            Background()
+            GradientBackground()
             Navigation()
             //HomeView(viewModel = viewModel)
         }

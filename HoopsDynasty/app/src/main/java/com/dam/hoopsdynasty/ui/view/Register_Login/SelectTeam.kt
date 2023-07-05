@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Button
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -55,14 +57,15 @@ fun SelectTeam(
             Box(
                 modifier = Modifier
                     .padding(8.dp)
-                    .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp)),
+                    .border((0.7.dp), colorScheme.primary, shape = RoundedCornerShape(8.dp)),
             ) {
                 Text(
                     text = "Choose a Team",
                     modifier = Modifier
                         .padding(horizontal = 40.dp, vertical = 10.dp),
-                    color = Color.White,
-                    fontSize = 23.sp
+                    color = colorScheme.primary,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Light
                 )
             }
         }
@@ -75,8 +78,8 @@ fun SelectTeam(
         Box(
             modifier = Modifier
                 .padding(8.dp)
-                .border(2.dp, Color.White, shape = RoundedCornerShape(8.dp))
-                .background(Color(0x4DEEEEEE))
+                .border((0.7.dp), colorScheme.primary, shape = RoundedCornerShape(8.dp))
+                .background(Color(0x4DEEEEEE), shape = RoundedCornerShape(8.dp))
         ) {
             LazyRow(Modifier.fillMaxSize()) {
                 val chunkedTeams = teams?.chunked(5)
